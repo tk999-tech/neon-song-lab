@@ -2,259 +2,725 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NEON SONG LAB</title>
 <style>
 :root{
-  --bg:#080a12;--panel:#0f1322;--panel2:#141a2c;--line:#293250;
-  --text:#eaf0ff;--muted:#7f8baa;--cyan:#43f6ff;--pink:#ff3bd4;--lime:#b8ff4a;
+ --bg:#080a12;--panel:#111522;--line:#30394d;
+ --text:#f4f7ff;--muted:#8791a8;
+ --cyan:#39f6ff;--pink:#ff4fc3;--lime:#b8ff4d;
 }
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 50% -10%,#17203b 0,#080a12 45%);
-color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2px}
-button{font:inherit;color:inherit}
-.app{max-width:1100px;margin:auto;padding:18px}
-header{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}
-.logo{font-size:24px;font-weight:900;color:var(--cyan);text-shadow:0 0 8px #43f6ff88}
-.logo small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
-.bpm{display:flex;align-items:center;gap:8px}
-.tap{background:#11182a;border:1px solid var(--cyan);padding:12px 18px;border-radius:8px;box-shadow:0 0 12px #43f6ff33;cursor:pointer}
-.tap:active{transform:scale(.96);background:#183043}
-.bpmnum{font-size:28px;min-width:70px;text-align:center;color:var(--lime)}
-.panel{background:#0d1220cc;border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 8px 30px #0005}
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tab{flex:1;padding:11px;border:1px solid var(--line);background:#0b1020;border-radius:7px;cursor:pointer}
-.tab.on{border-color:var(--pink);color:#fff;box-shadow:0 0 12px #ff3bd433}
-.hint{font-size:11px;color:var(--muted);margin:0 0 10px}
-#instrument{overflow:auto}
-.fret{min-width:760px;position:relative;padding:18px 6px 8px}
-.fret-row{display:grid;grid-template-columns:64px repeat(13,1fr);height:44px}
-.note{border-right:1px solid #39425e;border-bottom:1px solid #29324a;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
-.note:first-child{border-left:1px solid #39425e}
-.string{color:var(--muted);font-size:10px;border-bottom:1px solid #29324a;display:flex;align-items:center;justify-content:center}
-.note.dot:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#35405d}
-.note.selected{background:#ff3bd41f;color:#fff;box-shadow:inset 0 0 10px #ff3bd444}
-.note.selected b{background:var(--pink);color:#090b12;border-radius:50%;min-width:24px;height:24px;display:grid;place-items:center;box-shadow:0 0 12px #ff3bd4}
-.piano{min-width:760px;height:235px;display:flex;position:relative;padding:8px 3px 20px}
-.white{height:200px;flex:1;border:1px solid #4a5575;border-top:3px solid #aeb8d0;background:#edf2ff;color:#111827;display:flex;align-items:end;justify-content:center;padding-bottom:9px;cursor:pointer;position:relative}
-.white.selected{background:#ff3bd4;color:#fff;box-shadow:0 0 14px #ff3bd4}
-.black{position:absolute;top:8px;width:5.5%;height:125px;background:#10131e;border:1px solid #58627f;border-radius:0 0 5px 5px;z-index:3;cursor:pointer;display:flex;align-items:end;justify-content:center;padding-bottom:6px;color:#b9c3df;font-size:9px}
-.black.selected{background:#ff3bd4;box-shadow:0 0 14px #ff3bd4}
-.controls{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.clear{border:1px solid var(--line);background:#10162a;border-radius:6px;padding:7px 10px;cursor:pointer;font-size:11px}
-.chips{display:flex;gap:7px;flex-wrap:wrap}
-.chip{border:1px solid #33405e;border-radius:6px;padding:6px 9px;background:#10162a;font-size:11px}
-.section-title{color:var(--cyan);font-size:12px;margin-bottom:9px;text-transform:uppercase}
-.scale-grid,.chord-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.scale-btn,.chord-btn{background:#10162a;border:1px solid #303c5c;border-radius:7px;padding:10px;text-align:left;cursor:pointer}
-.scale-btn:hover,.chord-btn:hover{border-color:var(--cyan)}
-.scale-btn.active,.chord-btn.active{border-color:var(--pink);box-shadow:0 0 12px #ff3bd433}
-.scale-btn b,.chord-btn b{display:block;color:#fff}
-.scale-btn span,.chord-btn span{display:block;color:var(--muted);font-size:9px;margin-top:4px}
-.diagram-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.diagram{background:#0a0f1c;border:1px solid #27324e;border-radius:8px;padding:12px}
-.diagram h3{font-size:12px;margin:0 0 8px;color:var(--lime)}
-.svgbox{width:100%;height:250px}
-.empty{color:var(--muted);font-size:11px;padding:14px;border:1px dashed #2b3550;border-radius:7px}
-footer{font-size:9px;color:#59647e;text-align:center;padding:10px}
-@media(max-width:700px){.app{padding:10px}.diagram-wrap{grid-template-columns:1fr}.logo{font-size:18px}.bpmnum{font-size:23px}}
+body{
+ margin:0;background:radial-gradient(circle at 20% 0%,#17253b,#080a12 55%);
+ color:var(--text);font-family:ui-monospace,monospace
+}
+.app{max-width:760px;margin:auto;padding:16px}
+h1{color:var(--cyan);font-size:25px;margin:0}
+.sub{color:var(--muted);font-size:11px;margin:5px 0 15px}
+.panel{
+ background:#111522ee;border:2px solid var(--line);
+ border-radius:14px;padding:14px;margin:12px 0
+}
+h2{font-size:13px;color:var(--lime);margin:0 0 10px}
+button{
+ font:inherit;color:var(--text);background:#181e2d;
+ border:2px solid #3a455d;border-radius:9px;padding:8px 11px
+}
+button.active,button.selected{
+ border-color:var(--cyan);color:var(--cyan)
+}
+.row{display:flex;gap:7px;flex-wrap:wrap}
+.notes button{min-width:40px}
+.notes button.selected{background:var(--cyan);color:#061015}
+#bpm{font-size:28px;color:var(--pink);margin-right:10px}
+.status{font-size:11px;color:var(--muted);margin-top:8px}
+.chord{padding:9px 11px}
+.chord.selected{border-color:var(--pink);color:var(--pink)}
+.diagram{
+ min-height:260px;display:flex;justify-content:center;
+ align-items:center;overflow:auto
+}
+.empty{color:var(--muted);text-align:center;padding:50px 10px}
+.position{margin-top:10px}
+.credit{font-size:10px;color:#69748a;line-height:1.5}
+
+/* guitar */
+.guitar{
+ position:relative;width:340px;height:250px;
+ flex:none
+}
+.guitar-title{
+ position:absolute;left:0;top:0;
+ color:var(--pink);font-size:20px;font-weight:bold
+}
+.board{
+ position:absolute;left:65px;top:50px;
+ width:255px;height:175px;
+ border-left:6px solid #eee
+}
+.string{
+ position:absolute;top:0;bottom:0;
+ width:2px;background:#aeb7c8
+}
+.fret{
+ position:absolute;left:0;right:0;height:2px;
+ background:#68748c
+}
+.nut{
+ position:absolute;left:-5px;top:-3px;
+ width:6px;height:181px;background:#fff
+}
+.finger{
+ position:absolute;width:27px;height:27px;
+ border-radius:50%;background:var(--cyan);
+ color:#061015;font-size:11px;font-weight:bold;
+ display:flex;align-items:center;justify-content:center;
+ transform:translate(-50%,-50%);z-index:5
+}
+.open,.muted{
+ position:absolute;top:-30px;
+ transform:translateX(-50%);font-weight:bold
+}
+.open{color:var(--lime)}
+.muted{color:var(--pink)}
+.fretnum{
+ position:absolute;left:-35px;
+ color:#7e899e;font-size:10px
+}
+.barre{
+ position:absolute;height:22px;
+ border:4px solid var(--cyan);
+ border-radius:12px;
+ transform:translateY(-50%)
+}
+
+/* piano */
+.piano{
+ position:relative;width:350px;height:220px;flex:none
+}
+.piano-title{
+ position:absolute;top:0;left:0;
+ color:var(--pink);font-size:20px;font-weight:bold
+}
+.keys{
+ position:absolute;left:0;right:0;top:48px;
+ height:155px;display:flex
+}
+.white{
+ position:relative;flex:1;
+ background:#f5f7fb;border:1px solid #111;
+ color:#111
+}
+.black{
+ position:absolute;top:0;width:8%;
+ height:100px;background:#111;
+ border-radius:0 0 5px 5px;z-index:3
+}
+.key-dot{
+ position:absolute;bottom:18px;left:50%;
+ transform:translateX(-50%);
+ width:25px;height:25px;border-radius:50%;
+ background:var(--pink);color:white;
+ display:flex;align-items:center;justify-content:center;
+ font-size:9px;font-weight:bold
+}
 </style>
 </head>
+
 <body>
 <div class="app">
-<header>
-  <div class="logo">NEON SONG LAB<small>8-BIT SCALE / CHORD ASSISTANT</small></div>
-  <div class="bpm"><span class="bpmnum" id="bpm">120</span><button class="tap" id="tap">TAP BPM</button></div>
-</header>
+
+<h1>NEON SONG LAB</h1>
+<div class="sub">BPM → NOTE → SCALE → CHORD → REAL VOICING</div>
 
 <section class="panel">
-  <div class="tabs">
-    <button class="tab on" data-mode="guitar">🎸 GUITAR</button>
-    <button class="tab" data-mode="piano">🎹 PIANO</button>
-  </div>
-  <p class="hint">弾きたい音をタップして選択。複数音を選ぶと「その全部を含むスケール」を候補表示します。</p>
-  <div id="instrument"></div>
-  <div class="controls" style="margin-top:10px">
-    <div class="chips" id="selectedNotes"><span class="chip">音を選択してください</span></div>
-    <button class="clear" id="clear">CLEAR</button>
-  </div>
+<h2>01 BPM TAP</h2>
+<span id="bpm">120</span>
+<button onclick="tapBpm()">TAP</button>
+<button onclick="resetBpm()">RESET</button>
 </section>
 
 <section class="panel">
-  <div class="section-title">01 / SCALE CANDIDATES</div>
-  <div id="scales" class="scale-grid"><div class="empty">上の鍵盤・フレットから音を選択</div></div>
+<h2>02 NOTES</h2>
+<div class="row notes" id="notes"></div>
+<div class="status" id="status">音を選択してください</div>
 </section>
 
 <section class="panel">
-  <div class="section-title">02 / DIATONIC CHORDS</div>
-  <div id="chords" class="chord-grid"><div class="empty">スケールを選択</div></div>
+<h2>03 SCALE</h2>
+<div class="row" id="scales"></div>
 </section>
 
 <section class="panel">
-  <div class="section-title">03 / PLAYING SHAPES</div>
-  <div id="diagrams"><div class="empty">コードを選択</div></div>
+<h2>04 CHORDS</h2>
+<div class="row" id="chords"></div>
 </section>
-<footer>NEON SONG LAB • single-file prototype • BPMは4回以上タップした間隔の中央値から計算</footer>
+
+<section class="panel">
+<h2>05 REAL VOICING</h2>
+
+<div class="row">
+<button id="guitarBtn" class="active" onclick="setInstrument('guitar')">
+🎸 GUITAR
+</button>
+<button id="pianoBtn" onclick="setInstrument('piano')">
+🎹 PIANO
+</button>
+</div>
+
+<div class="diagram" id="diagram">
+<div class="empty">コードを選択してください</div>
+</div>
+
+<div class="row position" id="positions"></div>
+</section>
+
+<div class="credit">
+Chord data: tombatossals/chords-db<br>
+MIT License. Guitar data uses actual frets, fingers and barres from the database.
+</div>
+
 </div>
 
 <script>
-const PC=["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];
-const enh={"C♯":"Db","D♯":"Eb","F♯":"Gb","G♯":"Ab","A♯":"Bb"};
-const SCALE_DEFS=[
- ["Major",[0,2,4,5,7,9,11],"Ionian"],
- ["Natural Minor",[0,2,3,5,7,8,10],"Aeolian"],
- ["Dorian",[0,2,3,5,7,9,10],"Mode"],
- ["Mixolydian",[0,2,4,5,7,9,10],"Mode"],
- ["Phrygian",[0,1,3,5,7,8,10],"Mode"],
- ["Lydian",[0,2,4,6,7,9,11],"Mode"],
- ["Locrian",[0,1,3,5,6,8,10],"Mode"],
- ["Minor Pentatonic",[0,3,5,7,10],"Pentatonic"],
- ["Major Pentatonic",[0,2,4,7,9],"Pentatonic"],
- ["Blues",[0,3,5,6,7,10],"Blues"]
+const NOTES=[
+"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"
 ];
-const MAJOR_DEG=["I","ii","iii","IV","V","vi","vii°"];
-const MAJOR_QUAL=["","m","m","","","m","dim"];
-const MODE_QUAL={
- Major:["","m","m","","","m","dim"],
- Dorian:["m","m","","","m","dim",""],
- Phrygian:["m","","","","m","dim",""],
- Lydian:["","","m","m","dim","","m"],
- Mixolydian:["","","m","","m","dim",""],
- "Natural Minor":["m","dim","","m","m","",""],
- Locrian:["dim","","m","m","","","m"]
-};
-let mode="guitar", selected=[], currentScale=null, currentChord=null, tapTimes=[];
 
-function noteName(pc){return PC[(pc+12)%12]}
-function uniq(a){return [...new Set(a)]}
-function renderInstrument(){
- const el=document.getElementById("instrument");
- if(mode==="guitar"){
-   const strings=[["E",4],["A",9],["D",2],["G",7],["B",11],["E",4]];
-   let h='<div class="fret">';
-   h+='<div class="fret-row">'+['','0','1','2','3','4','5','6','7','8','9','10','11','12'].map(x=>`<div class="string">${x}</div>`).join('')+'</div>';
-   strings.forEach(([s,pc],si)=>{
-     h+='<div class="fret-row"><div class="string">'+s+'</div>';
-     for(let f=0;f<=12;f++){
-       const p=(pc+f)%12, sel=selected.includes(p);
-       const dot=[3,5,7,9,12].includes(f);
-       h+=`<div class="note ${dot?'dot':''} ${sel?'selected':''}" data-pc="${p}"><b>${noteName(p)}</b></div>`;
-     }
-     h+='</div>';
-   });
-   h+='</div>'; el.innerHTML=h;
- }else{
-   let h='<div class="piano">';
-   const whites=[0,2,4,5,7,9,11,0,2,4,5,7,9,11];
-   whites.forEach((p,i)=>h+=`<div class="white ${selected.includes(p)?'selected':''}" data-pc="${p}">${noteName(p)}</div>`);
-   const blackPos=[0,1,3,4,5,7,8,10,11,12];
-   blackPos.forEach((i,j)=>{const p=[1,3,6,8,10,1,3,6,8,10][j]; const left=(i+1)*100/14-2.75; h+=`<div class="black ${selected.includes(p)?'selected':''}" style="left:${left}%" data-pc="${p}">${noteName(p)}</div>`});
-   h+='</div>';el.innerHTML=h;
- }
- el.querySelectorAll("[data-pc]").forEach(n=>n.onclick=()=>toggleNote(+n.dataset.pc));
-}
-function toggleNote(pc){selected.includes(pc)?selected=selected.filter(x=>x!==pc):selected.push(pc);renderInstrument();renderSelected();renderScales()}
-function renderSelected(){
- document.getElementById("selectedNotes").innerHTML=selected.length?selected.map(p=>`<span class="chip">${noteName(p)}</span>`).join(""):'<span class="chip">音を選択してください</span>';
-}
-function renderScales(){
- const box=document.getElementById("scales");
- if(!selected.length){box.innerHTML='<div class="empty">上の鍵盤・フレットから音を選択</div>';return}
- let hits=[];
- for(let root=0;root<12;root++) for(const def of SCALE_DEFS){
-   const notes=def[1].map(x=>(root+x)%12);
-   if(selected.every(p=>notes.includes(p))) hits.push({root,name:def[0],intervals:def[1],type:def[2],notes});
- }
- hits.sort((a,b)=>a.notes.length-b.notes.length);
- box.innerHTML=hits.map((s,i)=>`<button class="scale-btn ${currentScale&&currentScale.root===s.root&&currentScale.name===s.name?'active':''}" data-i="${i}"><b>${noteName(s.root)} ${s.name}</b><span>${s.notes.map(noteName).join(" · ")}</span></button>`).join("")||'<div class="empty">この組み合わせに一致する登録スケールなし</div>';
- box.querySelectorAll("[data-i]").forEach((b)=>b.onclick=()=>{currentScale=hits[+b.dataset.i];currentChord=null;renderScales();renderChords();renderDiagram()});
-}
-function degreeRoot(scale,i){return (scale.root+scale.intervals[i])%12}
-function renderChords(){
- const box=document.getElementById("chords");
- if(!currentScale){box.innerHTML='<div class="empty">スケールを選択</div>';return}
- const is7=currentScale.intervals.length===7;
- let qs=MODE_QUAL[currentScale.name]||null;
- if(!qs) qs= currentScale.name==="Major"?MODE_QUAL.Major:currentScale.name==="Natural Minor"?MODE_QUAL["Natural Minor"]:null;
- let html="";
- if(is7){
-   for(let i=0;i<7;i++){
-     let q=qs?qs[i]:triadQualityFromScale(currentScale,i);
-     let label=noteName(degreeRoot(currentScale,i))+qualityName(q);
-     html+=`<button class="chord-btn ${currentChord&&currentChord.index===i?'active':''}" data-i="${i}"><b>${MAJOR_DEG[i]}　${label}</b><span>${currentScale.name} diatonic</span></button>`;
-   }
- }else{
-   const roots=currentScale.intervals;
-   roots.forEach((iv,i)=>{
-     html+=`<button class="chord-btn ${currentChord&&currentChord.index===i?'active':''}" data-i="${i}"><b>${noteName((currentScale.root+iv)%12)} major/minor</b><span>簡易ハーモナイズ</span></button>`;
-   });
- }
- box.innerHTML=html;
- box.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{currentChord={index:+b.dataset.i};renderChords();renderDiagram()});
-}
-function triadQualityFromScale(s,i){
- const pcs=s.intervals.map(x=>(s.root+x)%12), r=pcs[i], third=pcs[(i+2)%pcs.length], fifth=pcs[(i+4)%pcs.length];
- const d=(x,y)=>(y-x+12)%12;
- if(d(r,third)===3)return d(r,fifth)===6?"dim":"m";
- return d(r,fifth)===6?"aug":"";
-}
-function qualityName(q){return q==="m"?"m":q==="dim"?"dim":q==="aug"?"aug":q||""}
-function chordPitchSet(root,q){
- const map={"":[0,4,7],"m":[0,3,7],"dim":[0,3,6],"aug":[0,4,8],"7":[0,4,7,10],"maj7":[0,4,7,11],"m7":[0,3,7,10]};
- return (map[q]||map[""]).map(x=>(root+x)%12)
-}
-function pianoSVG(root,q){
- const pcs=chordPitchSet(root,q);let s=`<svg class="svgbox" viewBox="0 0 620 250"><rect width="620" height="250" fill="#0a0f1c"/>`;
- for(let i=0;i<14;i++){let x=20+i*41.5,p=[0,2,4,5,7,9,11][i%7];s+=`<rect x="${x}" y="30" width="41" height="190" fill="#edf2ff" stroke="#59647e"/>`; if(pcs.includes(p))s+=`<circle cx="${x+20}" cy="190" r="13" fill="#ff3bd4"/><text x="${x+20}" y="194" text-anchor="middle" font-size="10" fill="#111">${noteName(p)}</text>`}
- const black=[1,3,6,8,10,1,3,6,8,10];for(let i=0;i<10;i++){let x=20+(i+1)*41.5-14; s+=`<rect x="${x}" y="30" width="27" height="115" rx="3" fill="#111827" stroke="#59647e"/>`;if(pcs.includes(black[i]))s+=`<circle cx="${x+13}" cy="120" r="10" fill="#ff3bd4"/><text x="${x+13}" y="123" text-anchor="middle" font-size="8" fill="#fff">${noteName(black[i])}</text>`}
- return s+"</svg>";
-}
-function guitarSVG(root,q){
- const pcs=chordPitchSet(root,q), tuning=[4,9,2,7,11,4], frets=5;
- let best=null;
- // Find compact voicing with one position across strings, allowing muted strings.
- for(let base=0;base<=7;base++){
-   let positions=[],score=0;
-   for(let si=0;si<6;si++){
-     let choices=[];
-     for(let f=0;f<=frets;f++){let actual=(tuning[si]+base+f)%12;if(pcs.includes(actual))choices.push({f:base+f,p:actual})}
-     choices.sort((a,b)=>Math.abs(a.f-2)-Math.abs(b.f-2));positions.push(choices[0]||null);
-   }
-   const cnt=positions.filter(Boolean).length, uniqp=uniq(positions.filter(Boolean).map(x=>x.p)).length;
-   let sc=cnt*3+uniqp*2-(base?base*.2:0);
-   if(!best||sc>best.sc)best={positions,sc};
- }
- const pos=best.positions, min=Math.max(0,Math.min(...pos.filter(Boolean).map(x=>x.f))-1), max=min+5;
- let s=`<svg class="svgbox" viewBox="0 0 620 250"><rect width="620" height="250" fill="#0a0f1c"/>`;
- for(let i=0;i<6;i++){let y=35+i*34;s+=`<line x1="110" y1="${y}" x2="580" y2="${y}" stroke="#69758f" stroke-width="${1+i*.35}"/>`}
- for(let f=0;f<=5;f++){let x=110+f*94;s+=`<line x1="${x}" y1="35" x2="${x}" y2="205" stroke="#69758f" stroke-width="${f===0&&min===0?5:1}"/>`;s+=`<text x="${x+47}" y="225" fill="#7f8baa" font-size="10" text-anchor="middle">${min+f}</text>`}
- const names=["E","A","D","G","B","E"];names.forEach((n,i)=>s+=`<text x="88" y="${39+i*34}" fill="#7f8baa" font-size="10" text-anchor="end">${n}</text>`);
- pos.forEach((v,i)=>{let y=35+i*34;if(!v){s+=`<text x="72" y="${39+i*34}" fill="#ff5a9d" font-size="12" text-anchor="middle">×</text>`;return}let x=110+(v.f-min)*94+47;s+=`<circle cx="${x}" cy="${y}" r="12" fill="#ff3bd4"/><text x="${x}" y="${y+4}" fill="#111" font-size="9" text-anchor="middle">${noteName(v.p)}</text>`});
- return s+"</svg>";
-}
-function renderDiagram(){
- const el=document.getElementById("diagrams");
- if(!currentScale||!currentChord){el.innerHTML='<div class="empty">コードを選択</div>';return}
- const i=currentChord.index, root=degreeRoot(currentScale,i);
- let q;
- if(currentScale.intervals.length===7){
-   const qs=MODE_QUAL[currentScale.name]||MODE_QUAL.Major;
-   q=qs?qs[i]:"";
- }else q="";
- const name=noteName(root)+qualityName(q);
- el.innerHTML=`<div class="diagram-wrap"><div class="diagram"><h3>🎸 GUITAR　${name}</h3>${guitarSVG(root,q)}</div><div class="diagram"><h3>🎹 PIANO　${name}</h3>${pianoSVG(root,q)}</div></div>`;
-}
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));t.classList.add("on");mode=t.dataset.mode;renderInstrument()});
-document.getElementById("clear").onclick=()=>{selected=[];currentScale=null;currentChord=null;renderInstrument();renderSelected();renderScales();renderChords();renderDiagram()};
-document.getElementById("tap").onclick=()=>{
- const now=performance.now(); if(tapTimes.length&&now-tapTimes[tapTimes.length-1]>2500)tapTimes=[];
- tapTimes.push(now); if(tapTimes.length>8)tapTimes.shift();
- if(tapTimes.length>=2){
-   const ds=tapTimes.slice(1).map((t,i)=>t-tapTimes[i]).filter(x=>x>150&&x<2000).sort((a,b)=>a-b);
-   const mid=ds[Math.floor(ds.length/2)];if(mid)document.getElementById("bpm").textContent=Math.round(60000/mid);
- }
+const DB_ROOT=
+"https://raw.githubusercontent.com/tombatossals/chords-db/master/lib/";
+
+let guitarDB=null;
+let pianoDB=null;
+let instrument="guitar";
+let selectedNotes=[];
+let selectedScale=null;
+let selectedChord=null;
+let positions=[];
+let bpmTimes=[];
+
+/* ---------- notes ---------- */
+
+const notesBox=document.getElementById("notes");
+
+NOTES.forEach(note=>{
+ const b=document.createElement("button");
+ b.textContent=note;
+ b.onclick=()=>{
+  if(selectedNotes.includes(note)){
+   selectedNotes=selectedNotes.filter(x=>x!==note);
+   b.classList.remove("selected");
+  }else{
+   selectedNotes.push(note);
+   b.classList.add("selected");
+  }
+  findScales();
+ };
+ notesBox.appendChild(b);
+});
+
+/* ---------- scales ---------- */
+
+const SCALES={
+ "Major":[0,2,4,5,7,9,11],
+ "Natural Minor":[0,2,3,5,7,8,10],
+ "Dorian":[0,2,3,5,7,9,10],
+ "Phrygian":[0,1,3,5,7,8,10],
+ "Lydian":[0,2,4,6,7,9,11],
+ "Mixolydian":[0,2,4,5,7,9,10],
+ "Locrian":[0,1,3,5,6,8,10],
+ "Major Pentatonic":[0,2,4,7,9],
+ "Minor Pentatonic":[0,3,5,7,10],
+ "Blues":[0,3,5,6,7,10]
 };
-renderInstrument();renderSelected();renderScales();
+
+function noteIndex(n){
+ return NOTES.indexOf(n);
+}
+
+function findScales(){
+ const box=document.getElementById("scales");
+ box.innerHTML="";
+
+ if(selectedNotes.length===0){
+  document.getElementById("status").textContent=
+   "音を選択するとスケール候補が表示されます";
+  return;
+ }
+
+ let found=[];
+
+ for(const [scaleName,intervals] of Object.entries(SCALES)){
+  for(const root of NOTES){
+
+   const rootIndex=noteIndex(root);
+
+   const scaleNotes=intervals.map(i=>
+    NOTES[(rootIndex+i)%12]
+   );
+
+   if(selectedNotes.every(n=>scaleNotes.includes(n))){
+    found.push({
+     root,
+     name:scaleName,
+     notes:scaleNotes
+    });
+   }
+  }
+ }
+
+ found.forEach(scale=>{
+  const b=document.createElement("button");
+  b.textContent=scale.root+" "+scale.name;
+
+  b.onclick=()=>{
+   document.querySelectorAll("#scales button")
+    .forEach(x=>x.classList.remove("selected"));
+
+   b.classList.add("selected");
+   selectedScale=scale;
+   makeChords();
+  };
+
+  box.appendChild(b);
+ });
+
+ document.getElementById("status").textContent=
+  selectedNotes.join(" / ")+" を含むスケール";
+}
+
+/* ---------- chord theory ---------- */
+
+function chordQuality(root,third,fifth){
+
+ const a=(third-root+12)%12;
+ const b=(fifth-root+12)%12;
+
+ if(a===4 && b===7)return "major";
+ if(a===3 && b===7)return "minor";
+ if(a===3 && b===6)return "dim";
+ if(a===4 && b===8)return "aug";
+
+ return "major";
+}
+
+function makeChords(){
+
+ const box=document.getElementById("chords");
+ box.innerHTML="";
+
+ if(!selectedScale)return;
+
+ const arr=selectedScale.notes;
+
+ arr.forEach((root,i)=>{
+
+  const third=arr[(i+2)%arr.length];
+  const fifth=arr[(i+4)%arr.length];
+
+  const r=noteIndex(root);
+  const t=noteIndex(third);
+  const f=noteIndex(fifth);
+
+  const quality=chordQuality(r,t,f);
+
+  let suffix="";
+  let roman="";
+
+  if(quality==="minor"){
+   suffix="m";
+   roman=["i","ii","iii","iv","v","vi","vii"][i];
+  }else if(quality==="dim"){
+   suffix="dim";
+   roman=["i°","ii°","iii°","iv°","v°","vi°","vii°"][i];
+  }else if(quality==="aug"){
+   suffix="aug";
+   roman=["I+","II+","III+","IV+","V+","VI+","VII+"][i];
+  }else{
+   suffix="";
+   roman=["I","II","III","IV","V","VI","VII"][i];
+  }
+
+  const chordName=root+suffix;
+
+  const b=document.createElement("button");
+  b.className="chord";
+  b.textContent=roman+"  "+chordName;
+
+  b.onclick=()=>{
+   document.querySelectorAll(".chord")
+    .forEach(x=>x.classList.remove("selected"));
+
+   b.classList.add("selected");
+
+   selectedChord={
+    root:root,
+    suffix:quality,
+    name:chordName
+   };
+
+   showChord();
+  };
+
+  box.appendChild(b);
+ });
+}
+
+/* ---------- DB ---------- */
+
+async function loadDatabases(){
+
+ try{
+
+  const [g,p]=await Promise.all([
+   fetch(DB_ROOT+"guitar.json").then(r=>r.json()),
+   fetch(DB_ROOT+"piano.json").then(r=>r.json())
+  ]);
+
+  guitarDB=g;
+  pianoDB=p;
+
+  document.getElementById("status").textContent=
+   "コードDB読み込み完了";
+
+ }catch(e){
+
+  console.error(e);
+
+  document.getElementById("status").textContent=
+   "コードDBを読み込めませんでした。ネット接続を確認してください";
+ }
+}
+
+/* DB key spelling */
+
+function dbKey(root){
+
+ const map={
+  "C#":"C#",
+  "Eb":"Eb",
+  "F#":"F#",
+  "Ab":"Ab",
+  "Bb":"Bb"
+ };
+
+ return map[root]||root;
+}
+
+/* suffix names used by chords-db */
+
+function suffixCandidates(q){
+
+ if(q==="major")
+  return ["major"];
+
+ if(q==="minor")
+  return ["minor","m"];
+
+ if(q==="dim")
+  return ["dim"];
+
+ if(q==="aug")
+  return ["aug"];
+
+ return [q];
+}
+
+/* find actual DB chord */
+
+function findDBChord(db,root,quality){
+
+ if(!db)return null;
+
+ const key=dbKey(root);
+
+ let list=null;
+
+ if(db.chords && db.chords[key])
+  list=db.chords[key];
+
+ else if(Array.isArray(db))
+  list=db.filter(x=>x.key===key);
+
+ if(!list)return null;
+
+ for(const suffix of suffixCandidates(quality)){
+
+  const result=list.find(x=>x.suffix===suffix);
+
+  if(result)return result;
+ }
+
+ return null;
+}
+
+/* ---------- display ---------- */
+
+function showChord(){
+
+ const db=
+  instrument==="guitar" ? guitarDB : pianoDB;
+
+ const chord=findDBChord(
+  db,
+  selectedChord.root,
+  selectedChord.suffix
+ );
+
+ const box=document.getElementById("diagram");
+
+ if(!chord){
+
+  positions=[];
+
+  box.innerHTML=
+   '<div class="empty">このコードのDBデータがありません</div>';
+
+  document.getElementById("positions").innerHTML="";
+  return;
+ }
+
+ positions=chord.positions||[];
+
+ makePositionButtons();
+
+ if(positions.length)
+  drawPosition(0);
+}
+
+/* ---------- guitar ---------- */
+
+function makePositionButtons(){
+
+ const box=document.getElementById("positions");
+ box.innerHTML="";
+
+ positions.forEach((p,i)=>{
+
+  const b=document.createElement("button");
+
+  b.textContent="POSITION "+(i+1);
+
+  b.onclick=()=>drawPosition(i);
+
+  box.appendChild(b);
+ });
+}
+
+function drawPosition(index){
+
+ const p=positions[index];
+
+ if(instrument==="guitar"){
+  drawGuitar(p);
+ }else{
+  drawPiano(p);
+ }
+}
+
+function drawGuitar(p){
+
+ const frets=p.frets||[];
+ const fingers=p.fingers||[];
+ const base=p.baseFret||1;
+
+ let html=
+ '<div class="guitar">'+
+ '<div class="guitar-title">'+selectedChord.name+'</div>'+
+ '<div class="board">';
+
+ /* strings */
+
+ for(let s=0;s<6;s++){
+
+  html+=
+   '<div class="string" style="left:'+
+   (s*20)+'%"></div>';
+ }
+
+ /* frets */
+
+ for(let f=0;f<=5;f++){
+
+  html+=
+   '<div class="fret" style="top:'+
+   (f*25)+'%"></div>';
+ }
+
+ html+='<div class="nut"></div>';
+
+ /* strings / notes */
+
+ frets.forEach((f,s)=>{
+
+  const left=s*20;
+
+  if(f==="x" || f==="X"){
+
+   html+=
+    '<div class="muted" style="left:'+
+    left+'%">×</div>';
+
+  }else if(String(f)==="0"){
+
+   html+=
+    '<div class="open" style="left:'+
+    left+'%">○</div>';
+
+  }else{
+
+   const n=parseInt(f);
+
+   const top=(n-.5)*25;
+
+   const finger=fingers[s]||"";
+
+   html+=
+    '<div class="finger" style="left:'+
+    left+'%;top:'+top+'%">'+
+    finger+
+    '</div>';
+  }
+ });
+
+ /* fret number */
+
+ html+=
+  '<div class="fretnum" style="top:48px">'+
+  base+
+  '</div>';
+
+ html+='</div></div>';
+
+ document.getElementById("diagram").innerHTML=html;
+}
+
+/* ---------- piano ---------- */
+
+function drawPiano(p){
+
+ const notes=p.frets||[];
+
+ const active=new Set(
+  notes.map(normalizeNote)
+ );
+
+ const whites=[
+  "C","D","E","F","G","A","B"
+ ];
+
+ let html=
+ '<div class="piano">'+
+ '<div class="piano-title">'+
+ selectedChord.name+
+ '</div>'+
+ '<div class="keys">';
+
+ /* 14 white keys */
+
+ for(let i=0;i<14;i++){
+
+  const n=whites[i%7];
+
+  html+=
+   '<div class="white">';
+
+  if(active.has(n)){
+   html+='<div class="key-dot">'+n+'</div>';
+  }
+
+  html+='</div>';
+ }
+
+ /* black keys */
+
+ const blackNotes=["C#","D#","F#","G#","A#"];
+
+ for(let i=0;i<13;i++){
+
+  const note=blackNotes[i%5];
+
+  const left=(i+1)*100/14-4;
+
+  html+=
+   '<div class="black" style="left:'+
+   left+'%">';
+
+  if(active.has(note)){
+   html+='<div class="key-dot">'+note+'</div>';
+  }
+
+  html+='</div>';
+ }
+
+ html+='</div></div>';
+
+ document.getElementById("diagram").innerHTML=html;
+}
+
+function normalizeNote(n){
+
+ const map={
+  "Db":"C#",
+  "Eb":"D#",
+  "Gb":"F#",
+  "Ab":"G#",
+  "Bb":"A#"
+ };
+
+ return map[n]||n;
+}
+
+/* ---------- instrument ---------- */
+
+function setInstrument(type){
+
+ instrument=type;
+
+ document.getElementById("guitarBtn")
+  .classList.toggle("active",type==="guitar");
+
+ document.getElementById("pianoBtn")
+  .classList.toggle("active",type==="piano");
+
+ if(selectedChord)showChord();
+}
+
+/* ---------- BPM ---------- */
+
+function tapBpm(){
+
+ const now=Date.now();
+
+ bpmTimes=bpmTimes.filter(t=>now-t<3000);
+ bpmTimes.push(now);
+
+ if(bpmTimes.length>=2){
+
+  let total=0;
+
+  for(let i=1;i<bpmTimes.length;i++)
+   total+=bpmTimes[i]-bpmTimes[i-1];
+
+  const avg=total/(bpmTimes.length-1);
+
+  document.getElementById("bpm").textContent=
+   Math.round(60000/avg);
+ }
+}
+
+function resetBpm(){
+
+ bpmTimes=[];
+
+ document.getElementById("bpm").textContent="120";
+}
+
+/* start */
+
+loadDatabases();
+
 </script>
 </body>
 </html>
