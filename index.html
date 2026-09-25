@@ -1,726 +1,1702 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NEON SONG LAB</title>
+
 <style>
 :root{
- --bg:#080a12;--panel:#111522;--line:#30394d;
- --text:#f4f7ff;--muted:#8791a8;
- --cyan:#39f6ff;--pink:#ff4fc3;--lime:#b8ff4d;
+  --bg:#080a12;
+  --panel:#111522;
+  --panel2:#171c2d;
+  --text:#f4f7ff;
+  --muted:#8791a8;
+  --cyan:#00f6ff;
+  --pink:#ff3bd4;
+  --green:#6dff8a;
+  --yellow:#ffe66d;
+  --line:#30384f;
 }
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
+
 body{
- margin:0;background:radial-gradient(circle at 20% 0%,#17253b,#080a12 55%);
- color:var(--text);font-family:ui-monospace,monospace
+  margin:0;
+  background:
+    radial-gradient(circle at 20% 0%,#16204a 0,transparent 35%),
+    radial-gradient(circle at 100% 20%,#35133c 0,transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
 }
-.app{max-width:760px;margin:auto;padding:16px}
-h1{color:var(--cyan);font-size:25px;margin:0}
-.sub{color:var(--muted);font-size:11px;margin:5px 0 15px}
+
+header{
+  padding:18px 16px 10px;
+  text-align:center;
+}
+
+h1{
+  margin:0;
+  font-size:24px;
+  letter-spacing:2px;
+  color:var(--cyan);
+  text-shadow:0 0 10px rgba(0,246,255,.5);
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+main{
+  max-width:760px;
+  margin:auto;
+  padding:10px 14px 40px;
+}
+
 .panel{
- background:#111522ee;border:2px solid var(--line);
- border-radius:14px;padding:14px;margin:12px 0
+  background:rgba(17,21,34,.94);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
 }
-h2{font-size:13px;color:var(--lime);margin:0 0 10px}
+
+.label{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:1px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+
 button{
- font:inherit;color:var(--text);background:#181e2d;
- border:2px solid #3a455d;border-radius:9px;padding:8px 11px
-}
-button.active,button.selected{
- border-color:var(--cyan);color:var(--cyan)
-}
-.row{display:flex;gap:7px;flex-wrap:wrap}
-.notes button{min-width:40px}
-.notes button.selected{background:var(--cyan);color:#061015}
-#bpm{font-size:28px;color:var(--pink);margin-right:10px}
-.status{font-size:11px;color:var(--muted);margin-top:8px}
-.chord{padding:9px 11px}
-.chord.selected{border-color:var(--pink);color:var(--pink)}
-.diagram{
- min-height:260px;display:flex;justify-content:center;
- align-items:center;overflow:auto
-}
-.empty{color:var(--muted);text-align:center;padding:50px 10px}
-.position{margin-top:10px}
-.credit{font-size:10px;color:#69748a;line-height:1.5}
-
-/* guitar */
-.guitar{
- position:relative;width:340px;height:250px;
- flex:none
-}
-.guitar-title{
- position:absolute;left:0;top:0;
- color:var(--pink);font-size:20px;font-weight:bold
-}
-.board{
- position:absolute;left:65px;top:50px;
- width:255px;height:175px;
- border-left:6px solid #eee
-}
-.string{
- position:absolute;top:0;bottom:0;
- width:2px;background:#aeb7c8
-}
-.fret{
- position:absolute;left:0;right:0;height:2px;
- background:#68748c
-}
-.nut{
- position:absolute;left:-5px;top:-3px;
- width:6px;height:181px;background:#fff
-}
-.finger{
- position:absolute;width:27px;height:27px;
- border-radius:50%;background:var(--cyan);
- color:#061015;font-size:11px;font-weight:bold;
- display:flex;align-items:center;justify-content:center;
- transform:translate(-50%,-50%);z-index:5
-}
-.open,.muted{
- position:absolute;top:-30px;
- transform:translateX(-50%);font-weight:bold
-}
-.open{color:var(--lime)}
-.muted{color:var(--pink)}
-.fretnum{
- position:absolute;left:-35px;
- color:#7e899e;font-size:10px
-}
-.barre{
- position:absolute;height:22px;
- border:4px solid var(--cyan);
- border-radius:12px;
- transform:translateY(-50%)
+  border:1px solid #35405c;
+  background:#151b2b;
+  color:var(--text);
+  border-radius:10px;
+  padding:10px 13px;
+  font-size:15px;
+  cursor:pointer;
 }
 
-/* piano */
+button:active{
+  transform:scale(.97);
+}
+
+button.active{
+  border-color:var(--cyan);
+  color:var(--cyan);
+  box-shadow:0 0 12px rgba(0,246,255,.25);
+}
+
+.notes,
+.scales,
+.chords{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.big-bpm{
+  font-size:56px;
+  font-weight:bold;
+  text-align:center;
+  color:var(--cyan);
+  line-height:1;
+  margin:8px 0 14px;
+  text-shadow:0 0 15px rgba(0,246,255,.35);
+}
+
+.tap{
+  display:block;
+  width:100%;
+  font-size:20px;
+  padding:16px;
+  border-color:var(--pink);
+  color:var(--pink);
+}
+
+.reset{
+  display:block;
+  margin:9px auto 0;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.scale-title{
+  font-size:20px;
+  color:var(--yellow);
+  margin-bottom:10px;
+}
+
+.chord-button{
+  min-width:70px;
+  font-weight:bold;
+}
+
+.instrument-switch{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.instrument-switch button{
+  flex:1;
+}
+
+.diagram-wrap{
+  overflow-x:auto;
+  padding:8px 0 4px;
+}
+
+.diagram-title{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:10px;
+  color:var(--green);
+}
+
+.note-list{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+.status{
+  color:var(--muted);
+  font-size:12px;
+  min-height:18px;
+}
+
+/* =========================
+   GUITAR
+========================= */
+
+.guitar-box{
+  width:310px;
+  margin:0 auto;
+  position:relative;
+}
+
+.guitar-svg{
+  display:block;
+  width:310px;
+  height:365px;
+  overflow:visible;
+}
+
+.g-string{
+  stroke:#d5dbea;
+  stroke-width:2;
+}
+
+.g-fret{
+  stroke:#aeb7ca;
+  stroke-width:2;
+}
+
+.g-nut{
+  stroke:#ffffff;
+  stroke-width:7;
+}
+
+.g-dot{
+  fill:var(--cyan);
+  stroke:#ffffff;
+  stroke-width:2;
+  filter:drop-shadow(0 0 5px rgba(0,246,255,.8));
+}
+
+.g-barre{
+  fill:var(--cyan);
+  opacity:.9;
+  stroke:#fff;
+  stroke-width:1.5;
+  filter:drop-shadow(0 0 5px rgba(0,246,255,.8));
+}
+
+.g-open{
+  fill:none;
+  stroke:var(--green);
+  stroke-width:3;
+}
+
+.g-mute{
+  stroke:var(--pink);
+  stroke-width:3;
+}
+
+.g-text{
+  fill:#dce3f5;
+  font-size:13px;
+  font-family:Arial,sans-serif;
+  text-anchor:middle;
+}
+
+.g-finger{
+  fill:#080a12;
+  font-size:11px;
+  font-weight:bold;
+  font-family:Arial,sans-serif;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+
+.g-base{
+  fill:var(--yellow);
+  font-size:14px;
+  font-weight:bold;
+  font-family:Arial,sans-serif;
+}
+
+/* =========================
+   PIANO
+========================= */
+
+.piano-scroll{
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
 .piano{
- position:relative;width:350px;height:220px;flex:none
+  position:relative;
+  height:210px;
+  width:630px;
+  margin:0 auto;
 }
-.piano-title{
- position:absolute;top:0;left:0;
- color:var(--pink);font-size:20px;font-weight:bold
+
+.white-keys{
+  position:absolute;
+  left:0;
+  top:0;
+  display:flex;
+  height:210px;
 }
-.keys{
- position:absolute;left:0;right:0;top:48px;
- height:155px;display:flex
+
+.white-key{
+  position:relative;
+  width:45px;
+  height:210px;
+  background:#f5f7fb;
+  border:1px solid #222938;
+  border-radius:0 0 5px 5px;
 }
-.white{
- position:relative;flex:1;
- background:#f5f7fb;border:1px solid #111;
- color:#111
+
+.white-key .key-name{
+  position:absolute;
+  bottom:8px;
+  width:100%;
+  text-align:center;
+  color:#50596d;
+  font-size:11px;
 }
-.black{
- position:absolute;top:0;width:8%;
- height:100px;background:#111;
- border-radius:0 0 5px 5px;z-index:3
+
+.white-key.active{
+  background:var(--cyan);
+  box-shadow:
+    inset 0 -15px 25px rgba(0,50,60,.45),
+    0 0 14px rgba(0,246,255,.7);
 }
-.key-dot{
- position:absolute;bottom:18px;left:50%;
- transform:translateX(-50%);
- width:25px;height:25px;border-radius:50%;
- background:var(--pink);color:white;
- display:flex;align-items:center;justify-content:center;
- font-size:9px;font-weight:bold
+
+.white-key.root{
+  background:var(--pink);
+  box-shadow:
+    inset 0 -15px 25px rgba(60,0,50,.45),
+    0 0 16px rgba(255,59,212,.75);
+}
+
+.white-key.active .key-name,
+.white-key.root .key-name{
+  color:#071018;
+  font-weight:bold;
+}
+
+.black-keys{
+  position:absolute;
+  left:0;
+  top:0;
+  height:125px;
+  pointer-events:none;
+}
+
+.black-key{
+  position:absolute;
+  width:28px;
+  height:125px;
+  background:#080a0e;
+  border:1px solid #586073;
+  border-radius:0 0 5px 5px;
+  transform:translateX(-14px);
+  z-index:5;
+  box-shadow:0 4px 7px rgba(0,0,0,.6);
+}
+
+.black-key.active{
+  background:var(--cyan);
+  border-color:white;
+  box-shadow:0 0 13px rgba(0,246,255,.8);
+}
+
+.black-key.root{
+  background:var(--pink);
+  border-color:white;
+  box-shadow:0 0 14px rgba(255,59,212,.8);
+}
+
+.keyboard-legend{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.legend-root{
+  color:var(--pink);
+}
+
+.legend-chord{
+  color:var(--cyan);
+}
+
+/* mobile */
+@media(max-width:500px){
+  main{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .panel{
+    padding:12px;
+  }
+
+  .big-bpm{
+    font-size:48px;
+  }
 }
 </style>
 </head>
 
 <body>
-<div class="app">
 
-<h1>NEON SONG LAB</h1>
-<div class="sub">BPM → NOTE → SCALE → CHORD → REAL VOICING</div>
+<header>
+  <h1>NEON SONG LAB</h1>
+  <div class="subtitle">SONGWRITING TOOL / 8BIT MODE</div>
+</header>
 
-<section class="panel">
-<h2>01 BPM TAP</h2>
-<span id="bpm">120</span>
-<button onclick="tapBpm()">TAP</button>
-<button onclick="resetBpm()">RESET</button>
-</section>
+<main>
 
-<section class="panel">
-<h2>02 NOTES</h2>
-<div class="row notes" id="notes"></div>
-<div class="status" id="status">音を選択してください</div>
-</section>
+  <!-- BPM -->
+  <section class="panel">
+    <div class="label">BPM TAP</div>
 
-<section class="panel">
-<h2>03 SCALE</h2>
-<div class="row" id="scales"></div>
-</section>
+    <div id="bpm" class="big-bpm">120</div>
 
-<section class="panel">
-<h2>04 CHORDS</h2>
-<div class="row" id="chords"></div>
-</section>
+    <button class="tap" onclick="tapBpm()">TAP</button>
 
-<section class="panel">
-<h2>05 REAL VOICING</h2>
+    <button class="reset" onclick="resetBpm()">
+      RESET BPM
+    </button>
+  </section>
 
-<div class="row">
-<button id="guitarBtn" class="active" onclick="setInstrument('guitar')">
-🎸 GUITAR
-</button>
-<button id="pianoBtn" onclick="setInstrument('piano')">
-🎹 PIANO
-</button>
-</div>
 
-<div class="diagram" id="diagram">
-<div class="empty">コードを選択してください</div>
-</div>
+  <!-- NOTE -->
+  <section class="panel">
 
-<div class="row position" id="positions"></div>
-</section>
+    <div class="label">ROOT NOTE</div>
 
-<div class="credit">
-Chord data: tombatossals/chords-db<br>
-MIT License. Guitar data uses actual frets, fingers and barres from the database.
-</div>
+    <div id="notes" class="notes"></div>
 
-</div>
+  </section>
+
+
+  <!-- SCALE -->
+  <section class="panel">
+
+    <div class="label">SCALE</div>
+
+    <div id="scales" class="scales"></div>
+
+  </section>
+
+
+  <!-- CHORD -->
+  <section class="panel">
+
+    <div class="label">DIATONIC CHORDS</div>
+
+    <div id="scaleTitle" class="scale-title">
+      Select a scale
+    </div>
+
+    <div id="chords" class="chords"></div>
+
+  </section>
+
+
+  <!-- DIAGRAM -->
+  <section class="panel">
+
+    <div class="instrument-switch">
+
+      <button id="guitarBtn"
+              class="active"
+              onclick="setInstrument('guitar')">
+        🎸 GUITAR
+      </button>
+
+      <button id="pianoBtn"
+              onclick="setInstrument('piano')">
+        🎹 PIANO
+      </button>
+
+    </div>
+
+    <div id="diagram"></div>
+
+  </section>
+
+</main>
+
 
 <script>
-const NOTES=[
-"C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"
+
+/* =========================================================
+   BASIC MUSIC DATA
+========================================================= */
+
+const NOTE_NAMES = [
+  "C","C#","D","Eb","E","F",
+  "F#","G","Ab","A","Bb","B"
 ];
 
-const DB_ROOT=
-"https://raw.githubusercontent.com/tombatossals/chords-db/master/lib/";
-
-let guitarDB=null;
-let pianoDB=null;
-let instrument="guitar";
-let selectedNotes=[];
-let selectedScale=null;
-let selectedChord=null;
-let positions=[];
-let bpmTimes=[];
-
-/* ---------- notes ---------- */
-
-const notesBox=document.getElementById("notes");
-
-NOTES.forEach(note=>{
- const b=document.createElement("button");
- b.textContent=note;
- b.onclick=()=>{
-  if(selectedNotes.includes(note)){
-   selectedNotes=selectedNotes.filter(x=>x!==note);
-   b.classList.remove("selected");
-  }else{
-   selectedNotes.push(note);
-   b.classList.add("selected");
-  }
-  findScales();
- };
- notesBox.appendChild(b);
-});
-
-/* ---------- scales ---------- */
-
-const SCALES={
- "Major":[0,2,4,5,7,9,11],
- "Natural Minor":[0,2,3,5,7,8,10],
- "Dorian":[0,2,3,5,7,9,10],
- "Phrygian":[0,1,3,5,7,8,10],
- "Lydian":[0,2,4,6,7,9,11],
- "Mixolydian":[0,2,4,5,7,9,10],
- "Locrian":[0,1,3,5,6,8,10],
- "Major Pentatonic":[0,2,4,7,9],
- "Minor Pentatonic":[0,3,5,7,10],
- "Blues":[0,3,5,6,7,10]
+/*
+  chords-db は Db / Gb 表記を使うので変換する
+*/
+const DB_NOTE = {
+  "C":"C",
+  "C#":"Db",
+  "D":"D",
+  "Eb":"Eb",
+  "E":"E",
+  "F":"F",
+  "F#":"Gb",
+  "G":"G",
+  "Ab":"Ab",
+  "A":"A",
+  "Bb":"Bb",
+  "B":"B"
 };
 
-function noteIndex(n){
- return NOTES.indexOf(n);
-}
 
-function findScales(){
- const box=document.getElementById("scales");
- box.innerHTML="";
-
- if(selectedNotes.length===0){
-  document.getElementById("status").textContent=
-   "音を選択するとスケール候補が表示されます";
-  return;
- }
-
- let found=[];
-
- for(const [scaleName,intervals] of Object.entries(SCALES)){
-  for(const root of NOTES){
-
-   const rootIndex=noteIndex(root);
-
-   const scaleNotes=intervals.map(i=>
-    NOTES[(rootIndex+i)%12]
-   );
-
-   if(selectedNotes.every(n=>scaleNotes.includes(n))){
-    found.push({
-     root,
-     name:scaleName,
-     notes:scaleNotes
-    });
-   }
-  }
- }
-
- found.forEach(scale=>{
-  const b=document.createElement("button");
-  b.textContent=scale.root+" "+scale.name;
-
-  b.onclick=()=>{
-   document.querySelectorAll("#scales button")
-    .forEach(x=>x.classList.remove("selected"));
-
-   b.classList.add("selected");
-   selectedScale=scale;
-   makeChords();
-  };
-
-  box.appendChild(b);
- });
-
- document.getElementById("status").textContent=
-  selectedNotes.join(" / ")+" を含むスケール";
-}
-
-/* ---------- chord theory ---------- */
-
-function chordQuality(root,third,fifth){
-
- const a=(third-root+12)%12;
- const b=(fifth-root+12)%12;
-
- if(a===4 && b===7)return "major";
- if(a===3 && b===7)return "minor";
- if(a===3 && b===6)return "dim";
- if(a===4 && b===8)return "aug";
-
- return "major";
-}
-
-function makeChords(){
-
- const box=document.getElementById("chords");
- box.innerHTML="";
-
- if(!selectedScale)return;
-
- const arr=selectedScale.notes;
-
- arr.forEach((root,i)=>{
-
-  const third=arr[(i+2)%arr.length];
-  const fifth=arr[(i+4)%arr.length];
-
-  const r=noteIndex(root);
-  const t=noteIndex(third);
-  const f=noteIndex(fifth);
-
-  const quality=chordQuality(r,t,f);
-
-  let suffix="";
-  let roman="";
-
-  if(quality==="minor"){
-   suffix="m";
-   roman=["i","ii","iii","iv","v","vi","vii"][i];
-  }else if(quality==="dim"){
-   suffix="dim";
-   roman=["i°","ii°","iii°","iv°","v°","vi°","vii°"][i];
-  }else if(quality==="aug"){
-   suffix="aug";
-   roman=["I+","II+","III+","IV+","V+","VI+","VII+"][i];
-  }else{
-   suffix="";
-   roman=["I","II","III","IV","V","VI","VII"][i];
-  }
-
-  const chordName=root+suffix;
-
-  const b=document.createElement("button");
-  b.className="chord";
-  b.textContent=roman+"  "+chordName;
-
-  b.onclick=()=>{
-   document.querySelectorAll(".chord")
-    .forEach(x=>x.classList.remove("selected"));
-
-   b.classList.add("selected");
-
-   selectedChord={
-    root:root,
-    suffix:quality,
-    name:chordName
-   };
-
-   showChord();
-  };
-
-  box.appendChild(b);
- });
-}
-
-/* ---------- DB ---------- */
-
-async function loadDatabases(){
-
- try{
-
-  const [g,p]=await Promise.all([
-   fetch(DB_ROOT+"guitar.json").then(r=>r.json()),
-   fetch(DB_ROOT+"piano.json").then(r=>r.json())
-  ]);
-
-  guitarDB=g;
-  pianoDB=p;
-
-  document.getElementById("status").textContent=
-   "コードDB読み込み完了";
-
- }catch(e){
-
-  console.error(e);
-
-  document.getElementById("status").textContent=
-   "コードDBを読み込めませんでした。ネット接続を確認してください";
- }
-}
-
-/* DB key spelling */
-
-function dbKey(root){
-
- const map={
-  "C#":"C#",
-  "Eb":"Eb",
-  "F#":"F#",
-  "Ab":"Ab",
-  "Bb":"Bb"
- };
-
- return map[root]||root;
-}
-
-/* suffix names used by chords-db */
-
-function suffixCandidates(q){
-
- if(q==="major")
-  return ["major"];
-
- if(q==="minor")
-  return ["minor","m"];
-
- if(q==="dim")
-  return ["dim"];
-
- if(q==="aug")
-  return ["aug"];
-
- return [q];
-}
-
-/* find actual DB chord */
-
-function findDBChord(db,root,quality){
-
- if(!db)return null;
-
- const key=dbKey(root);
-
- let list=null;
-
- if(db.chords && db.chords[key])
-  list=db.chords[key];
-
- else if(Array.isArray(db))
-  list=db.filter(x=>x.key===key);
-
- if(!list)return null;
-
- for(const suffix of suffixCandidates(quality)){
-
-  const result=list.find(x=>x.suffix===suffix);
-
-  if(result)return result;
- }
-
- return null;
-}
-
-/* ---------- display ---------- */
-
-function showChord(){
-
- const db=
-  instrument==="guitar" ? guitarDB : pianoDB;
-
- const chord=findDBChord(
-  db,
-  selectedChord.root,
-  selectedChord.suffix
- );
-
- const box=document.getElementById("diagram");
-
- if(!chord){
-
-  positions=[];
-
-  box.innerHTML=
-   '<div class="empty">このコードのDBデータがありません</div>';
-
-  document.getElementById("positions").innerHTML="";
-  return;
- }
-
- positions=chord.positions||[];
-
- makePositionButtons();
-
- if(positions.length)
-  drawPosition(0);
-}
-
-/* ---------- guitar ---------- */
-
-function makePositionButtons(){
-
- const box=document.getElementById("positions");
- box.innerHTML="";
-
- positions.forEach((p,i)=>{
-
-  const b=document.createElement("button");
-
-  b.textContent="POSITION "+(i+1);
-
-  b.onclick=()=>drawPosition(i);
-
-  box.appendChild(b);
- });
-}
-
-function drawPosition(index){
-
- const p=positions[index];
-
- if(instrument==="guitar"){
-  drawGuitar(p);
- }else{
-  drawPiano(p);
- }
-}
-
-function drawGuitar(p){
-
- const frets=p.frets||[];
- const fingers=p.fingers||[];
- const base=p.baseFret||1;
-
- let html=
- '<div class="guitar">'+
- '<div class="guitar-title">'+selectedChord.name+'</div>'+
- '<div class="board">';
-
- /* strings */
-
- for(let s=0;s<6;s++){
-
-  html+=
-   '<div class="string" style="left:'+
-   (s*20)+'%"></div>';
- }
-
- /* frets */
-
- for(let f=0;f<=5;f++){
-
-  html+=
-   '<div class="fret" style="top:'+
-   (f*25)+'%"></div>';
- }
-
- html+='<div class="nut"></div>';
-
- /* strings / notes */
-
- frets.forEach((f,s)=>{
-
-  const left=s*20;
-
-  if(f==="x" || f==="X"){
-
-   html+=
-    '<div class="muted" style="left:'+
-    left+'%">×</div>';
-
-  }else if(String(f)==="0"){
-
-   html+=
-    '<div class="open" style="left:'+
-    left+'%">○</div>';
-
-  }else{
-
-   const n=parseInt(f);
-
-   const top=(n-.5)*25;
-
-   const finger=fingers[s]||"";
-
-   html+=
-    '<div class="finger" style="left:'+
-    left+'%;top:'+top+'%">'+
-    finger+
-    '</div>';
-  }
- });
-
- /* fret number */
-
- html+=
-  '<div class="fretnum" style="top:48px">'+
-  base+
-  '</div>';
-
- html+='</div></div>';
-
- document.getElementById("diagram").innerHTML=html;
-}
-
-/* ---------- piano ---------- */
-
-function drawPiano(p){
-
- const notes=p.frets||[];
-
- const active=new Set(
-  notes.map(normalizeNote)
- );
-
- const whites=[
-  "C","D","E","F","G","A","B"
- ];
-
- let html=
- '<div class="piano">'+
- '<div class="piano-title">'+
- selectedChord.name+
- '</div>'+
- '<div class="keys">';
-
- /* 14 white keys */
-
- for(let i=0;i<14;i++){
-
-  const n=whites[i%7];
-
-  html+=
-   '<div class="white">';
-
-  if(active.has(n)){
-   html+='<div class="key-dot">'+n+'</div>';
-  }
-
-  html+='</div>';
- }
-
- /* black keys */
-
- const blackNotes=["C#","D#","F#","G#","A#"];
-
- for(let i=0;i<13;i++){
-
-  const note=blackNotes[i%5];
-
-  const left=(i+1)*100/14-4;
-
-  html+=
-   '<div class="black" style="left:'+
-   left+'%">';
-
-  if(active.has(note)){
-   html+='<div class="key-dot">'+note+'</div>';
-  }
-
-  html+='</div>';
- }
-
- html+='</div></div>';
-
- document.getElementById("diagram").innerHTML=html;
-}
-
-function normalizeNote(n){
-
- const map={
-  "Db":"C#",
-  "Eb":"D#",
-  "Gb":"F#",
-  "Ab":"G#",
-  "Bb":"A#"
- };
-
- return map[n]||n;
-}
-
-/* ---------- instrument ---------- */
-
-function setInstrument(type){
-
- instrument=type;
-
- document.getElementById("guitarBtn")
-  .classList.toggle("active",type==="guitar");
-
- document.getElementById("pianoBtn")
-  .classList.toggle("active",type==="piano");
-
- if(selectedChord)showChord();
-}
-
-/* ---------- BPM ---------- */
+/*
+  各メジャースケール
+  半音数
+*/
+const MAJOR_INTERVALS = [
+  0,2,4,5,7,9,11
+];
+
+
+/*
+  マイナースケール
+*/
+const MINOR_INTERVALS = [
+  0,2,3,5,7,8,10
+];
+
+
+/*
+  三和音の品質
+*/
+const TRIAD_QUALITY = [
+  "major",
+  "minor",
+  "minor",
+  "major",
+  "major",
+  "minor",
+  "dim"
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let selectedRoot = "C";
+let selectedScale = "major";
+let selectedChord = {
+  root:"C",
+  quality:"major",
+  name:"C"
+};
+
+let instrument = "guitar";
+
+let guitarDB = null;
+let pianoDB = null;
+
+let bpmTimes = [];
+
+
+/* =========================================================
+   BPM
+========================================================= */
 
 function tapBpm(){
 
- const now=Date.now();
+  const now = Date.now();
 
- bpmTimes=bpmTimes.filter(t=>now-t<3000);
- bpmTimes.push(now);
+  bpmTimes.push(now);
 
- if(bpmTimes.length>=2){
+  if(bpmTimes.length > 6){
+    bpmTimes.shift();
+  }
 
-  let total=0;
+  if(bpmTimes.length >= 2){
 
-  for(let i=1;i<bpmTimes.length;i++)
-   total+=bpmTimes[i]-bpmTimes[i-1];
+    let intervals = [];
 
-  const avg=total/(bpmTimes.length-1);
+    for(let i=1;i<bpmTimes.length;i++){
+      intervals.push(
+        bpmTimes[i] - bpmTimes[i-1]
+      );
+    }
 
-  document.getElementById("bpm").textContent=
-   Math.round(60000/avg);
- }
+    const avg =
+      intervals.reduce((a,b)=>a+b,0)
+      / intervals.length;
+
+    const bpm =
+      Math.round(60000 / avg);
+
+    if(bpm >= 30 && bpm <= 300){
+      document.getElementById("bpm").textContent = bpm;
+    }
+  }
 }
+
 
 function resetBpm(){
 
- bpmTimes=[];
+  bpmTimes = [];
 
- document.getElementById("bpm").textContent="120";
+  document.getElementById("bpm").textContent = "120";
 }
 
-/* start */
+
+/* =========================================================
+   NOTE BUTTONS
+========================================================= */
+
+function renderNotes(){
+
+  const box =
+    document.getElementById("notes");
+
+  box.innerHTML = "";
+
+  NOTE_NAMES.forEach(note=>{
+
+    const btn =
+      document.createElement("button");
+
+    btn.textContent = note;
+
+    if(note === selectedRoot){
+      btn.classList.add("active");
+    }
+
+    btn.onclick = ()=>{
+
+      selectedRoot = note;
+
+      renderNotes();
+      renderScales();
+
+      /*
+        デフォルトでMajor
+      */
+      selectedScale = "major";
+
+      renderScales();
+      renderChords();
+    };
+
+    box.appendChild(btn);
+  });
+}
+
+
+/* =========================================================
+   SCALE
+========================================================= */
+
+function getScaleNotes(root, type){
+
+  const rootIndex =
+    NOTE_NAMES.indexOf(root);
+
+  const intervals =
+    type === "minor"
+      ? MINOR_INTERVALS
+      : MAJOR_INTERVALS;
+
+  return intervals.map(i=>
+    NOTE_NAMES[
+      (rootIndex+i)%12
+    ]
+  );
+}
+
+
+function renderScales(){
+
+  const box =
+    document.getElementById("scales");
+
+  box.innerHTML = "";
+
+  const scales = [
+    {
+      id:"major",
+      label:"Major"
+    },
+    {
+      id:"minor",
+      label:"Minor"
+    }
+  ];
+
+  scales.forEach(scale=>{
+
+    const btn =
+      document.createElement("button");
+
+    btn.textContent =
+      selectedRoot + " " + scale.label;
+
+    if(selectedScale === scale.id){
+      btn.classList.add("active");
+    }
+
+    btn.onclick = ()=>{
+
+      selectedScale =
+        scale.id;
+
+      renderScales();
+      renderChords();
+
+    };
+
+    box.appendChild(btn);
+  });
+}
+
+
+/* =========================================================
+   CHORDS
+========================================================= */
+
+function renderChords(){
+
+  const box =
+    document.getElementById("chords");
+
+  const title =
+    document.getElementById("scaleTitle");
+
+  box.innerHTML = "";
+
+  const scaleNotes =
+    getScaleNotes(
+      selectedRoot,
+      selectedScale
+    );
+
+  title.textContent =
+    selectedRoot +
+    " " +
+    (selectedScale === "major"
+      ? "Major"
+      : "Minor");
+
+
+  /*
+    Major / Minor のダイアトニック三和音
+  */
+  scaleNotes.forEach((root,index)=>{
+
+    let quality;
+
+    if(selectedScale === "major"){
+
+      quality =
+        TRIAD_QUALITY[index];
+
+    }else{
+
+      /*
+        Natural minor
+        i ii° III iv v VI VII
+      */
+      const minorQualities = [
+        "minor",
+        "dim",
+        "major",
+        "minor",
+        "minor",
+        "major",
+        "major"
+      ];
+
+      quality =
+        minorQualities[index];
+    }
+
+
+    const suffix =
+      quality === "major"
+        ? ""
+        : quality === "minor"
+          ? "m"
+          : "dim";
+
+
+    const name =
+      root + suffix;
+
+
+    const btn =
+      document.createElement("button");
+
+    btn.className =
+      "chord-button";
+
+    btn.textContent =
+      name;
+
+
+    btn.onclick = ()=>{
+
+      selectedChord = {
+        root:root,
+        quality:quality,
+        name:name
+      };
+
+      renderChords();
+      renderDiagram();
+
+    };
+
+
+    if(
+      selectedChord.root === root &&
+      selectedChord.quality === quality
+    ){
+      btn.classList.add("active");
+    }
+
+
+    box.appendChild(btn);
+
+  });
+
+}
+
+
+/* =========================================================
+   INSTRUMENT
+========================================================= */
+
+function setInstrument(type){
+
+  instrument = type;
+
+  document
+    .getElementById("guitarBtn")
+    .classList.toggle(
+      "active",
+      type === "guitar"
+    );
+
+  document
+    .getElementById("pianoBtn")
+    .classList.toggle(
+      "active",
+      type === "piano"
+    );
+
+  renderDiagram();
+}
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const DB_ROOT =
+  "https://raw.githubusercontent.com/tombatossals/chords-db/master/lib/";
+
+
+async function loadDatabases(){
+
+  const status =
+    document.getElementById("diagram");
+
+  status.innerHTML =
+    `<div class="status">
+      Loading chord database...
+    </div>`;
+
+
+  try{
+
+    const [g,p] =
+      await Promise.all([
+
+        fetch(DB_ROOT+"guitar.json")
+          .then(r=>r.json()),
+
+        fetch(DB_ROOT+"piano.json")
+          .then(r=>r.json())
+
+      ]);
+
+    guitarDB = g;
+    pianoDB = p;
+
+    renderDiagram();
+
+  }catch(error){
+
+    console.error(error);
+
+    status.innerHTML =
+      `<div class="status">
+        Chord database could not be loaded.
+      </div>`;
+  }
+}
+
+
+/* =========================================================
+   DATABASE LOOKUP
+========================================================= */
+
+function findChord(db, root, quality){
+
+  if(!db || !db.chords){
+    return null;
+  }
+
+  const dbRoot =
+    DB_NOTE[root] || root;
+
+  const list =
+    db.chords[dbRoot];
+
+  if(!Array.isArray(list)){
+    return null;
+  }
+
+  /*
+    chords-db の標準名
+  */
+  const aliases = {
+
+    major:["major"],
+
+    minor:["minor","m"],
+
+    dim:["dim"],
+
+    aug:["aug"]
+
+  };
+
+  const possible =
+    aliases[quality] || [quality];
+
+
+  for(const suffix of possible){
+
+    const found =
+      list.find(c =>
+        c.suffix === suffix
+      );
+
+    if(found){
+      return found;
+    }
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   CHORD NOTE CALCULATION
+========================================================= */
+
+function chordPitchClasses(root, quality){
+
+  const rootIndex =
+    NOTE_NAMES.indexOf(root);
+
+  let intervals;
+
+  switch(quality){
+
+    case "minor":
+      intervals = [0,3,7];
+      break;
+
+    case "dim":
+      intervals = [0,3,6];
+      break;
+
+    case "aug":
+      intervals = [0,4,8];
+      break;
+
+    default:
+      intervals = [0,4,7];
+  }
+
+  return intervals.map(i=>
+    (rootIndex+i)%12
+  );
+}
+
+
+/* =========================================================
+   NOTE NAME -> PITCH
+========================================================= */
+
+function noteToPitch(note){
+
+  const normalized =
+    note
+      .replace("Db","C#")
+      .replace("D#","Eb")
+      .replace("Gb","F#")
+      .replace("G#","Ab")
+      .replace("A#","Bb");
+
+  return NOTE_NAMES.indexOf(normalized);
+}
+
+
+/* =========================================================
+   GUITAR DIAGRAM
+========================================================= */
+
+function renderGuitar(){
+
+  const root =
+    selectedChord.root;
+
+  const quality =
+    selectedChord.quality;
+
+  const chord =
+    findChord(
+      guitarDB,
+      root,
+      quality
+    );
+
+
+  if(!chord){
+
+    return `
+      <div class="diagram-title">
+        ${selectedChord.name}
+      </div>
+      <div class="status">
+        Guitar position not found.
+      </div>
+    `;
+  }
+
+
+  /*
+    最初のポジションを使用
+  */
+  const position =
+    chord.positions &&
+    chord.positions[0];
+
+
+  if(!position){
+
+    return `
+      <div class="status">
+        No guitar position.
+      </div>
+    `;
+  }
+
+
+  const frets =
+    String(position.frets || "xxxxxx");
+
+
+  const fingers =
+    String(
+      position.fingers || ""
+    );
+
+
+  const baseFret =
+    Number(position.baseFret || 1);
+
+
+  /*
+    SVGサイズ
+  */
+  const W = 310;
+  const H = 365;
+
+  /*
+    弦のX座標
+    左→右
+    6弦(E) → 1弦(e)
+  */
+  const xs = [
+    65,101,137,173,209,245
+  ];
+
+  /*
+    フレットのY座標
+  */
+  const top = 75;
+  const fretHeight = 45;
+
+
+  let svg =
+    `<svg
+      class="guitar-svg"
+      viewBox="0 0 ${W} ${H}"
+      aria-label="Guitar chord diagram"
+    >`;
+
+
+  /*
+    タイトル
+  */
+  svg += `
+    <text
+      x="155"
+      y="28"
+      fill="#6dff8a"
+      font-size="23"
+      font-weight="bold"
+      text-anchor="middle"
+    >
+      ${selectedChord.name}
+    </text>
+  `;
+
+
+  /*
+    ベースフレット表示
+  */
+  if(baseFret > 1){
+
+    svg += `
+      <text
+        class="g-base"
+        x="28"
+        y="101"
+        text-anchor="middle"
+      >
+        ${baseFret}fr
+      </text>
+    `;
+  }
+
+
+  /*
+    6本の弦
+  */
+  xs.forEach(x=>{
+
+    svg += `
+      <line
+        class="g-string"
+        x1="${x}"
+        y1="${top}"
+        x2="${x}"
+        y2="${top+fretHeight*4}"
+      />
+    `;
+
+  });
+
+
+  /*
+    4フレット
+  */
+  for(let i=0;i<=4;i++){
+
+    const y =
+      top + fretHeight*i;
+
+    svg += `
+      <line
+        class="${i===0 && baseFret===1
+          ? "g-nut"
+          : "g-fret"}"
+        x1="65"
+        y1="${y}"
+        x2="245"
+        y2="${y}"
+      />
+    `;
+  }
+
+
+  /*
+    弦番号
+  */
+  xs.forEach((x,i)=>{
+
+    const stringNo =
+      6-i;
+
+    svg += `
+      <text
+        class="g-text"
+        x="${x}"
+        y="320"
+      >
+        ${stringNo}
+      </text>
+    `;
+
+  });
+
+
+  /*
+    フレット番号
+  */
+  for(let i=1;i<=4;i++){
+
+    svg += `
+      <text
+        class="g-text"
+        x="285"
+        y="${top + fretHeight*(i-.5)+5}"
+      >
+        ${baseFret+i-1}
+      </text>
+    `;
+  }
+
+
+  /*
+    セーハ
+  */
+  if(position.barres){
+
+    let barreFret =
+      position.barres;
+
+    if(Array.isArray(barreFret)){
+      barreFret = barreFret[0];
+    }
+
+    if(typeof barreFret === "object"){
+      barreFret =
+        barreFret.fret ||
+        barreFret.from ||
+        1;
+    }
+
+    barreFret =
+      Number(barreFret);
+
+
+    const local =
+      barreFret - baseFret;
+
+
+    if(local >= 1 && local <= 4){
+
+      const y =
+        top +
+        fretHeight*(local-.5);
+
+
+      svg += `
+        <rect
+          class="g-barre"
+          x="65"
+          y="${y-9}"
+          width="180"
+          height="18"
+          rx="9"
+        />
+      `;
+
+    }
+
+  }
+
+
+  /*
+    各弦の押さえ方
+  */
+  for(let i=0;i<6;i++){
+
+    const x = xs[i];
+
+    const value =
+      frets[i] || "x";
+
+    const finger =
+      fingers[i] || "";
+
+
+    /*
+      ミュート
+    */
+    if(
+      value === "x" ||
+      value === "X"
+    ){
+
+      svg += `
+        <line
+          class="g-mute"
+          x1="${x-7}"
+          y1="52"
+          x2="${x+7}"
+          y2="66"
+        />
+        <line
+          class="g-mute"
+          x1="${x+7}"
+          y1="52"
+          x2="${x-7}"
+          y2="66"
+        />
+      `;
+
+      continue;
+    }
+
+
+    const fret =
+      value === "0"
+        ? 0
+        : parseInt(value,16);
+
+
+    /*
+      開放弦
+    */
+    if(fret === 0){
+
+      svg += `
+        <circle
+          class="g-open"
+          cx="${x}"
+          cy="59"
+          r="8"
+        />
+      `;
+
+      continue;
+    }
+
+
+    /*
+      押弦位置
+    */
+    const localFret =
+      fret - baseFret + 1;
+
+
+    if(
+      localFret >= 1 &&
+      localFret <= 4
+    ){
+
+      const y =
+        top +
+        fretHeight*(localFret-.5);
+
+
+      /*
+        セーハ部分にすでにバーがある場合も
+        上から指番号を表示
+      */
+      svg += `
+        <circle
+          class="g-dot"
+          cx="${x}"
+          cy="${y}"
+          r="12"
+        />
+      `;
+
+
+      if(
+        finger &&
+        finger !== "0"
+      ){
+
+        svg += `
+          <text
+            class="g-finger"
+            x="${x}"
+            y="${y}"
+          >
+            ${finger}
+          </text>
+        `;
+
+      }
+
+    }
+
+  }
+
+
+  svg += `</svg>`;
+
+
+  return `
+    <div class="diagram-title">
+      ${selectedChord.name}
+    </div>
+
+    <div class="note-list">
+      Guitar / standard tuning
+    </div>
+
+    <div class="guitar-box">
+      ${svg}
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   PIANO DIAGRAM
+========================================================= */
+
+function renderPiano(){
+
+  const root =
+    selectedChord.root;
+
+  const quality =
+    selectedChord.quality;
+
+  const chord =
+    findChord(
+      pianoDB,
+      root,
+      quality
+    );
+
+
+  /*
+    DBから音を取得できれば使う。
+    取得できない場合は三和音から計算。
+  */
+  let activePitches = [];
+
+
+  if(
+    chord &&
+    chord.positions &&
+    chord.positions[0]
+  ){
+
+    const position =
+      chord.positions[0];
+
+
+    /*
+      chords-dbのpianoデータでは
+      frets / midi のいずれかが存在する
+    */
+    if(
+      Array.isArray(position.frets)
+    ){
+
+      position.frets.forEach(n=>{
+
+        const p =
+          noteToPitch(String(n));
+
+        if(p >= 0){
+          activePitches.push(p);
+        }
+
+      });
+
+    }
+
+
+    /*
+      fretsがない場合だけMIDIを使う
+    */
+    if(
+      activePitches.length === 0 &&
+      Array.isArray(position.midi)
+    ){
+
+      position.midi.forEach(m=>{
+
+        activePitches.push(
+          Number(m)%12
+        );
+
+      });
+
+    }
+
+  }
+
+
+  /*
+    DBから取得できなかった場合の安全策
+  */
+  if(activePitches.length === 0){
+
+    activePitches =
+      chordPitchClasses(
+        root,
+        quality
+      );
+
+  }
+
+
+  activePitches =
+    [...new Set(activePitches)];
+
+
+  const rootPitch =
+    NOTE_NAMES.indexOf(root);
+
+
+  /*
+    2オクターブ
+    白鍵14個
+  */
+  const whiteNotes = [];
+
+  for(let octave=0;octave<2;octave++){
+
+    [
+      "C","D","E","F","G","A","B"
+    ].forEach(note=>{
+
+      whiteNotes.push(note);
+
+    });
+
+  }
+
+
+  /*
+    ピアノ本体
+  */
+  let html =
+    `<div class="diagram-title">
+      ${selectedChord.name}
+    </div>
+
+    <div class="note-list">
+      Piano / chord tones highlighted
+    </div>
+
+    <div class="piano-scroll">
+      <div class="piano">
+        <div class="white-keys">`;
+
+
+  /*
+    白鍵
+  */
+  whiteNotes.forEach((note,index)=>{
+
+    const pitch =
+      NOTE_NAMES.indexOf(note);
+
+    const active =
+      activePitches.includes(pitch);
+
+    const rootClass =
+      pitch === rootPitch
+        ? " root"
+        : "";
+
+    html += `
+      <div
+        class="white-key
+          ${active ? "active" : ""}
+          ${rootClass}"
+      >
+        <span class="key-name">
+          ${note}
+        </span>
+      </div>
+    `;
+
+  });
+
+
+  html += `
+        </div>
+        <div class="black-keys">
+  `;
+
+
+  /*
+    黒鍵の位置
+
+    白鍵幅45px
+
+    C# = CとDの間
+    D# = DとEの間
+    F# = FとGの間
+    G# = GとAの間
+    A# = AとBの間
+  */
+
+  const blackPositions = [
+    {after:0,pitch:1,name:"C#"},
+    {after:1,pitch:3,name:"D#"},
+    {after:3,pitch:6,name:"F#"},
+    {after:4,pitch:8,name:"G#"},
+    {after:5,pitch:10,name:"A#"}
+  ];
+
+
+  for(let octave=0;octave<2;octave++){
+
+    blackPositions.forEach(b=>{
+
+      /*
+        白鍵のindex
+      */
+      const whiteIndex =
+        octave*7 + b.after;
+
+      const left =
+        (whiteIndex+1)*45;
+
+
+      const active =
+        activePitches.includes(
+          b.pitch
+        );
+
+
+      const rootClass =
+        b.pitch === rootPitch
+          ? " root"
+          : "";
+
+
+      html += `
+        <div
+          class="black-key
+            ${active ? "active" : ""}
+            ${rootClass}"
+          style="left:${left}px"
+          title="${b.name}"
+        ></div>
+      `;
+
+    });
+
+  }
+
+
+  html += `
+        </div>
+      </div>
+    </div>
+
+    <div class="keyboard-legend">
+      <span class="legend-root">● ROOT</span>
+      <span class="legend-chord">● CHORD TONE</span>
+    </div>
+  `;
+
+
+  return html;
+}
+
+
+/* =========================================================
+   DIAGRAM
+========================================================= */
+
+function renderDiagram(){
+
+  const box =
+    document.getElementById("diagram");
+
+
+  if(!guitarDB || !pianoDB){
+
+    box.innerHTML =
+      `<div class="status">
+        Loading chord data...
+      </div>`;
+
+    return;
+  }
+
+
+  if(instrument === "guitar"){
+
+    box.innerHTML =
+      renderGuitar();
+
+  }else{
+
+    box.innerHTML =
+      renderPiano();
+
+  }
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+renderNotes();
+
+renderScales();
+
+renderChords();
 
 loadDatabases();
 
 </script>
+
 </body>
 </html>
