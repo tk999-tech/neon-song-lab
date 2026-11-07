@@ -1010,11 +1010,9 @@ function renderGuitar(){
   );
 
   if(!chord || !chord.positions?.length){
-    return `<div class="diagram-title">${selectedChord.name}</div>
-    <div class="status">コードデータがありません</div>`;
+    return `<div class="status">コードデータがありません</div>`;
   }
 
-  // 基本コードは正しいオープンコードを優先
   const preferred = {
     "C-major":"x32010",
     "A-minor":"x02210",
@@ -1025,18 +1023,30 @@ function renderGuitar(){
   };
 
   const key = `${selectedChord.root}-${selectedChord.quality}`;
+
   const pos = chord.positions.find(p =>
-    p.frets === preferred[key]
+    Array.isArray(p.frets)
+      ? p.frets.join("") === preferred[key]
+      : String(p.frets) === preferred[key]
   ) || chord.positions[0];
 
-  const frets = String(pos.frets).toLowerCase().split("");
-  const fingers = String(pos.fingers || "000000").split("");
+  const toArray = v =>
+    Array.isArray(v) ? v.map(String) : String(v || "").split("");
+
+  const frets = toArray(pos.frets);
+  const fingers = toArray(pos.fingers);
+
+  while(frets.length < 6) frets.push("x");
+  while(fingers.length < 6) fingers.push("0");
 
   const base = Number(pos.baseFret || 1);
   const left = 85, top = 65;
   const fw = 58, sh = 34;
   const right = left + fw * 4;
   const bottom = top + sh * 5;
+
+  // データは6弦→1弦。画面は1弦→6弦。
+  const stringY = s => top + (5-s)*sh;
 
   let svg = `<svg viewBox="0 0 390 290"
     style="width:100%;max-width:390px;display:block;margin:auto">`;
@@ -1050,35 +1060,41 @@ function renderGuitar(){
       text-anchor="middle" fill="#8791a8">${base+f}</text>`;
   }
 
-  // 6弦から1弦
+  // 弦：上から1弦、2弦…6弦
   for(let s=0;s<6;s++){
-    const y=top+s*sh;
+    const y = stringY(s);
+
     svg += `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}"
-      stroke="#d5dbea" stroke-width="2"/>`;
+      stroke="#d5dbea" stroke-width="${1.3+s*0.2}"/>`;
+
     svg += `<text x="60" y="${y+5}" text-anchor="middle"
       fill="#dce3f5" font-size="14">${6-s}</text>`;
   }
 
+  // フレット線
   for(let f=0;f<=4;f++){
     const x=left+f*fw;
     svg += `<line x1="${x}" y1="${top}" x2="${x}" y2="${bottom}"
       stroke="#aeb7ca" stroke-width="${f===0 && base===1 ? 5 : 2}"/>`;
   }
 
-  // 同じ指・同じフレットの連続箇所をセーハとして判定
-  const barreGroups = {};
+  // セーハ判定
+  const groups={};
+
   for(let s=0;s<6;s++){
-    const fret=parseInt(frets[s],16);
-    const finger=fingers[s];
+    const value=String(frets[s]).toLowerCase();
+    const fret=value==="x" ? -1 : Number(value);
+    const finger=String(fingers[s] || "0");
+
     if(fret>0 && finger!=="0"){
       const k=`${fret}-${finger}`;
-      (barreGroups[k] ||= []).push(s);
+      (groups[k] ||= []).push(s);
     }
   }
 
-  const barreStrings = new Set();
+  const barreStrings=new Set();
 
-  Object.entries(barreGroups).forEach(([k,strings])=>{
+  Object.entries(groups).forEach(([k,strings])=>{
     if(strings.length<2) return;
 
     const [fret]=k.split("-").map(Number);
@@ -1086,28 +1102,31 @@ function renderGuitar(){
     if(local<1 || local>4) return;
 
     const x=left+(local-.5)*fw;
-    const y1=top+Math.min(...strings)*sh;
-    const y2=top+Math.max(...strings)*sh;
+    const y1=stringY(Math.max(...strings));
+    const y2=stringY(Math.min(...strings));
 
     svg += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"
-      stroke="#00f6ff" stroke-width="17"
+      stroke="#00f6ff" stroke-width="16"
       stroke-linecap="round"/>`;
 
     strings.forEach(s=>barreStrings.add(s));
   });
 
+  // 指・開放弦・ミュート
   for(let s=0;s<6;s++){
-    const y=top+s*sh;
-    const v=frets[s];
-    const finger=fingers[s] || "0";
 
-    if(v==="x"){
+    const y=stringY(s);
+    const value=String(frets[s]).toLowerCase();
+    const finger=String(fingers[s] || "0");
+
+    if(value==="x" || value==="-1"){
       svg += `<text x="${left-25}" y="${y+6}"
-        fill="#ff3bd4" font-size="21" text-anchor="middle">×</text>`;
+        fill="#ff3bd4" font-size="21"
+        text-anchor="middle">×</text>`;
       continue;
     }
 
-    const fret=parseInt(v,16);
+    const fret=Number(value);
 
     if(fret===0){
       svg += `<circle cx="${left-25}" cy="${y}" r="7"
@@ -1124,8 +1143,9 @@ function renderGuitar(){
       fill="#00f6ff" stroke="white" stroke-width="1.5"/>`;
 
     if(finger!=="0"){
-      svg += `<text x="${x}" y="${y+4}" text-anchor="middle"
-        fill="#080a12" font-size="12" font-weight="bold">${finger}</text>`;
+      svg += `<text x="${x}" y="${y+4}"
+        text-anchor="middle" fill="#080a12"
+        font-size="12" font-weight="bold">${finger}</text>`;
     }
   }
 
