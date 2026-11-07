@@ -1009,130 +1009,123 @@ function renderGuitar(){
     selectedChord.quality
   );
 
-  if(!chord || !chord.positions || !chord.positions.length){
+  if(!chord || !chord.positions?.length){
     return `<div class="diagram-title">${selectedChord.name}</div>
-    <div class="status">Chord position not found.</div>`;
+    <div class="status">コードデータがありません</div>`;
   }
 
-  const pos = chord.positions[0];
+  // 基本コードは正しいオープンコードを優先
+  const preferred = {
+    "C-major":"x32010",
+    "A-minor":"x02210",
+    "G-major":"320003",
+    "D-major":"xx0232",
+    "E-minor":"022000",
+    "F-major":"133211"
+  };
 
-  // 配列・文字列の両形式に対応
-  const toChars = v =>
-    Array.isArray(v) ? v.map(String) : String(v || "").split("");
+  const key = `${selectedChord.root}-${selectedChord.quality}`;
+  const pos = chord.positions.find(p =>
+    p.frets === preferred[key]
+  ) || chord.positions[0];
 
-  const frets = toChars(pos.frets);
-  const fingers = toChars(pos.fingers);
+  const frets = String(pos.frets).toLowerCase().split("");
+  const fingers = String(pos.fingers || "000000").split("");
 
-  while(frets.length < 6) frets.push("x");
-  while(fingers.length < 6) fingers.push("0");
+  const base = Number(pos.baseFret || 1);
+  const left = 85, top = 65;
+  const fw = 58, sh = 34;
+  const right = left + fw * 4;
+  const bottom = top + sh * 5;
 
-  const baseFret = Number(pos.baseFret || 1);
-  const barreFret = Number(pos.barres || 0);
+  let svg = `<svg viewBox="0 0 390 290"
+    style="width:100%;max-width:390px;display:block;margin:auto">`;
 
-  const W = 390;
-  const H = 270;
-  const left = 65;
-  const top = 55;
-  const fretWidth = 55;
-  const stringGap = 30;
-  const right = left + fretWidth * 4;
-  const bottom = top + stringGap * 5;
+  svg += `<text x="195" y="27" text-anchor="middle"
+    fill="#6dff8a" font-size="23" font-weight="bold">
+    ${selectedChord.name}</text>`;
 
-  let svg = `<svg viewBox="0 0 ${W} ${H}"
-    style="width:100%;max-width:420px;display:block;margin:auto">`;
-
-  svg += `<text x="195" y="25"
-    text-anchor="middle" fill="#6dff8a"
-    font-size="22" font-weight="bold">${selectedChord.name}</text>`;
-
-  // フレット番号
-  for(let f=0; f<4; f++){
-    svg += `<text x="${left+(f+0.5)*fretWidth}" y="45"
-      text-anchor="middle" fill="#8791a8" font-size="12">
-      ${baseFret+f}</text>`;
+  for(let f=0;f<4;f++){
+    svg += `<text x="${left+(f+.5)*fw}" y="50"
+      text-anchor="middle" fill="#8791a8">${base+f}</text>`;
   }
 
-  // 弦
-  for(let s=0; s<6; s++){
-    const y = top+s*stringGap;
-
+  // 6弦から1弦
+  for(let s=0;s<6;s++){
+    const y=top+s*sh;
     svg += `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}"
-      stroke="#d5dbea" stroke-width="${1.3+s*0.25}"/>`;
-
-    svg += `<text x="42" y="${y+4}" text-anchor="middle"
-      fill="#dce3f5" font-size="13">${6-s}</text>`;
+      stroke="#d5dbea" stroke-width="2"/>`;
+    svg += `<text x="60" y="${y+5}" text-anchor="middle"
+      fill="#dce3f5" font-size="14">${6-s}</text>`;
   }
 
-  // フレット線
-  for(let f=0; f<=4; f++){
-    const x = left+f*fretWidth;
+  for(let f=0;f<=4;f++){
+    const x=left+f*fw;
     svg += `<line x1="${x}" y1="${top}" x2="${x}" y2="${bottom}"
-      stroke="#aeb7ca" stroke-width="${f===0 && baseFret===1 ? 5 : 2}"/>`;
+      stroke="#aeb7ca" stroke-width="${f===0 && base===1 ? 5 : 2}"/>`;
   }
 
-  // セーハの対象弦を特定
-  let barreStrings = [];
-
-  if(barreFret > 0){
-    for(let s=0; s<6; s++){
-      if(Number.parseInt(frets[s],16) === barreFret){
-        barreStrings.push(s);
-      }
+  // 同じ指・同じフレットの連続箇所をセーハとして判定
+  const barreGroups = {};
+  for(let s=0;s<6;s++){
+    const fret=parseInt(frets[s],16);
+    const finger=fingers[s];
+    if(fret>0 && finger!=="0"){
+      const k=`${fret}-${finger}`;
+      (barreGroups[k] ||= []).push(s);
     }
   }
 
-  // セーハを横棒で描画
-  if(barreStrings.length >= 2){
-    const first = Math.min(...barreStrings);
-    const last = Math.max(...barreStrings);
-    const local = barreFret-baseFret+1;
+  const barreStrings = new Set();
 
-    if(local >= 1 && local <= 4){
-      const x = left+(local-0.5)*fretWidth;
-      const y1 = top+first*stringGap;
-      const y2 = top+last*stringGap;
+  Object.entries(barreGroups).forEach(([k,strings])=>{
+    if(strings.length<2) return;
 
-      svg += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"
-        stroke="#00f6ff" stroke-width="15"
-        stroke-linecap="round" opacity="0.95"/>`;
-    }
-  }
+    const [fret]=k.split("-").map(Number);
+    const local=fret-base+1;
+    if(local<1 || local>4) return;
 
-  // 各弦の表示
-  for(let s=0; s<6; s++){
+    const x=left+(local-.5)*fw;
+    const y1=top+Math.min(...strings)*sh;
+    const y2=top+Math.max(...strings)*sh;
 
-    const y = top+s*stringGap;
-    const value = String(frets[s]).toLowerCase();
-    const finger = String(fingers[s] || "0");
+    svg += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"
+      stroke="#00f6ff" stroke-width="17"
+      stroke-linecap="round"/>`;
 
-    if(value === "x"){
-      svg += `<text x="${left-22}" y="${y+6}"
-        fill="#ff3bd4" font-size="20" text-anchor="middle">×</text>`;
+    strings.forEach(s=>barreStrings.add(s));
+  });
+
+  for(let s=0;s<6;s++){
+    const y=top+s*sh;
+    const v=frets[s];
+    const finger=fingers[s] || "0";
+
+    if(v==="x"){
+      svg += `<text x="${left-25}" y="${y+6}"
+        fill="#ff3bd4" font-size="21" text-anchor="middle">×</text>`;
       continue;
     }
 
-    const fret = Number.parseInt(value,16);
+    const fret=parseInt(v,16);
 
-    if(fret === 0){
-      svg += `<circle cx="${left-22}" cy="${y}" r="7"
+    if(fret===0){
+      svg += `<circle cx="${left-25}" cy="${y}" r="7"
         fill="none" stroke="#6dff8a" stroke-width="2.5"/>`;
       continue;
     }
 
-    const local = fret-baseFret+1;
-    if(local < 1 || local > 4) continue;
+    const local=fret-base+1;
+    if(local<1 || local>4 || barreStrings.has(s)) continue;
 
-    const x = left+(local-0.5)*fretWidth;
+    const x=left+(local-.5)*fw;
 
-    // セーハのドットは横棒で表現済み
-    if(barreStrings.includes(s)) continue;
-
-    svg += `<circle cx="${x}" cy="${y}" r="10"
+    svg += `<circle cx="${x}" cy="${y}" r="11"
       fill="#00f6ff" stroke="white" stroke-width="1.5"/>`;
 
-    if(finger !== "0"){
+    if(finger!=="0"){
       svg += `<text x="${x}" y="${y+4}" text-anchor="middle"
-        fill="#080a12" font-size="11" font-weight="bold">${finger}</text>`;
+        fill="#080a12" font-size="12" font-weight="bold">${finger}</text>`;
     }
   }
 
@@ -1143,7 +1136,7 @@ function renderGuitar(){
     <div class="note-list">Guitar / Standard tuning</div>
     ${svg}
     <div class="status" style="text-align:center">
-      × Mute　○ Open　● Finger　━ Barre
+      × Mute　○ Open　● Finger　┃ Barre
     </div>
   `;
 }
