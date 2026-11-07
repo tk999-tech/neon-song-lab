@@ -1,245 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NEON SONG LAB</title>
-
 <style>
-:root{
-  --bg:#090b16;
-  --panel:#14182a;
-  --line:#292f48;
-  --text:#edf2ff;
-  --muted:#8994b5;
-  --cyan:#00f6ff;
-  --green:#6dff8a;
-  --pink:#ff3bd4;
-}
+:root{--bg:#090b16;--panel:#14182a;--line:#292f48;--text:#edf2ff;--muted:#8994b5;--cyan:#00f6ff;--green:#6dff8a;--pink:#ff3bd4}
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-  padding:16px;
-}
+body{margin:0;padding:14px;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 .container{max-width:850px;margin:auto}
-header{text-align:center;padding:20px 0 28px}
-h1{
-  margin:0;
-  color:var(--cyan);
-  letter-spacing:4px;
-  font-size:28px;
-  text-shadow:0 0 15px #00f6ff66;
-}
+header{text-align:center;padding:18px 0 25px}
+h1{margin:0;color:var(--cyan);letter-spacing:4px;font-size:27px;text-shadow:0 0 15px #00f6ff66}
 .subtitle{color:var(--muted);font-size:11px;letter-spacing:3px}
-.section{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:16px;
-}
-.section-title{
-  color:var(--cyan);
-  font-size:13px;
-  letter-spacing:2px;
-  margin-bottom:14px;
-  font-weight:bold;
-}
-.info{color:var(--muted);font-size:12px;line-height:1.7}
-.status{color:var(--muted);font-size:11px;text-align:center;margin-top:10px}
-button{
-  background:#20263d;
-  border:1px solid #343c59;
-  border-radius:8px;
-  color:var(--text);
-  padding:12px 8px;
-  font-size:14px;
-  cursor:pointer;
-}
-button.active{
-  background:#063d47;
-  border-color:var(--cyan);
-  color:var(--cyan);
-  box-shadow:0 0 10px #00f6ff44;
-}
-button:active{transform:scale(.98)}
-
-/* INPUT KEYBOARD */
-.input-keyboard{
-  position:relative;
-  display:flex;
-  width:100%;
-  height:170px;
-  margin:20px auto 10px;
-  user-select:none;
-}
-.input-white{
-  flex:1;
-  min-width:0;
-  height:170px;
-  background:#f2f3f6;
-  border:1px solid #555;
-  border-radius:0 0 6px 6px;
-  position:relative;
-  color:#333;
-  z-index:1;
-}
-.input-white.selected{
-  background:var(--green);
-  box-shadow:inset 0 0 15px #00aa66;
-}
-.input-black{
-  position:absolute;
-  top:0;
-  height:105px;
-  width:8%;
-  background:#171a26;
-  border:1px solid #777;
-  border-radius:0 0 5px 5px;
-  z-index:3;
-  padding:0;
-}
-.input-black.selected{
-  background:var(--pink);
-  box-shadow:0 0 12px #ff3bd477;
-}
-.key-label{
-  position:absolute;
-  bottom:9px;
-  left:0;
-  width:100%;
-  text-align:center;
-  font-size:11px;
-  color:#333;
-}
-.input-black .key-label{color:white}
-.selection{
-  color:var(--green);
-  font-size:12px;
-  margin-top:12px;
-  line-height:1.8;
-}
-.clear-button{width:100%;margin-top:12px}
-
-/* SCALE */
-.scale-grid,.chord-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(125px,1fr));
-  gap:9px;
-  margin-top:12px;
-}
-.scale-card{
-  background:#1d243b;
-  border:1px solid var(--line);
-  border-radius:9px;
-  padding:12px;
-  cursor:pointer;
-}
-.scale-card.active{
-  border-color:var(--green);
-  background:#12352d;
-}
+.section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:15px}
+.section-title{color:var(--cyan);font-size:13px;letter-spacing:2px;margin-bottom:13px;font-weight:bold}
+.info,.status{color:var(--muted);font-size:12px;line-height:1.7}
+button{background:#20263d;border:1px solid #343c59;border-radius:8px;color:var(--text);padding:11px 8px;font-size:13px;cursor:pointer}
+button.active{background:#063d47;border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 9px #00f6ff44}
+.input-keyboard{position:relative;display:flex;width:100%;height:155px;margin:18px auto 10px;user-select:none}
+.input-white{flex:1;min-width:0;height:155px;background:#f2f3f6;border:1px solid #555;border-radius:0 0 6px 6px;position:relative;color:#333;z-index:1}
+.input-white.selected{background:var(--green)}
+.input-black{position:absolute;top:0;height:95px;width:8%;background:#171a26;border:1px solid #777;border-radius:0 0 5px 5px;z-index:3;padding:0}
+.input-black.selected{background:var(--pink)}
+.key-label{position:absolute;bottom:8px;left:0;width:100%;text-align:center;font-size:11px;color:#333}
+.selection{color:var(--green);font-size:12px;margin-top:10px}
+.clear{width:100%;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:12px}
+.scale-card{background:#1d243b;border:1px solid var(--line);border-radius:9px;padding:10px;cursor:pointer}
+.scale-card.active{border-color:var(--green);background:#12352d}
 .scale-name{font-weight:bold;color:var(--green)}
-.scale-notes{
-  font-size:11px;
-  color:var(--muted);
-  margin-top:7px;
-  line-height:1.7;
-}
-.chord-card{text-align:center;padding:12px 5px}
-.chord-card.active{
-  border-color:var(--pink);
-  color:var(--pink);
-  background:#351634;
-}
-.chord-name{font-size:19px;font-weight:bold}
-.chord-degree{font-size:10px;color:var(--muted);margin-top:5px}
-
-/* DIAGRAM */
-.tabs{display:flex;gap:8px;margin-bottom:15px}
+.scale-notes{font-size:10px;color:var(--muted);margin-top:6px}
+.chord-card{text-align:center;padding:11px 4px}
+.chord-card.active{border-color:var(--pink);color:var(--pink);background:#351634}
+.chord-name{font-size:18px;font-weight:bold}
+.tabs{display:flex;gap:8px;margin:12px 0}
 .tabs button{flex:1}
-.diagram-title{
-  text-align:center;
-  color:var(--green);
-  font-size:23px;
-  font-weight:bold;
-  margin:12px;
-}
-#diagram{overflow:hidden}
-.empty{color:var(--muted);font-size:13px;text-align:center;padding:20px}
-
-/* PIANO DIAGRAM */
-.output-piano{
-  position:relative;
-  display:flex;
-  height:155px;
-  width:100%;
-  max-width:650px;
-  margin:20px auto;
-}
-.white-key{
-  flex:1;
-  min-width:0;
-  background:#f1f2f5;
-  border:1px solid #555;
-  border-radius:0 0 5px 5px;
-  position:relative;
-  color:#333;
-}
-.white-key.selected{background:var(--green)}
-.black-key{
-  position:absolute;
-  top:0;
-  width:5.5%;
-  height:95px;
-  background:#171a26;
-  border:1px solid #777;
-  border-radius:0 0 4px 4px;
-  z-index:2;
-  transform:translateX(-50%);
-}
-.black-key.selected{background:var(--pink)}
-.output-label{
-  position:absolute;
-  bottom:7px;
-  width:100%;
-  text-align:center;
-  font-size:10px;
-  color:#333;
-}
-
-/* BPM */
-.bpm-box{text-align:center}
-.bpm-number{
-  font-size:58px;
-  font-weight:bold;
-  color:var(--cyan);
-}
-.bpm-button{
-  width:100%;
-  max-width:250px;
-  padding:20px;
-  font-size:17px;
-  background:#063d47;
-  border-color:var(--cyan);
-}
-.reset{margin-top:10px;font-size:11px;color:var(--muted)}
-
-@media(max-width:480px){
-  body{padding:10px}
-  h1{font-size:24px}
-  .section{padding:13px}
-  .input-keyboard{height:145px}
-  .input-white{height:145px}
-  .input-black{height:90px}
-  .bpm-number{font-size:48px}
-}
+.diagram-title{text-align:center;color:var(--green);font-size:22px;font-weight:bold;margin:10px}
+.empty{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+.quality-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+.quality-grid button{font-size:12px}
+.shape-list{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:10px}
+.bpm{text-align:center;font-size:55px;color:var(--cyan);font-weight:bold}
+.bpm-button{width:100%;max-width:250px;padding:18px;font-size:17px;background:#063d47;border-color:var(--cyan)}
+.piano{position:relative;display:flex;height:145px;max-width:650px;margin:18px auto}
+.pwhite{flex:1;background:#f1f2f5;border:1px solid #555;position:relative;border-radius:0 0 4px 4px}
+.pwhite.on{background:var(--green)}
+.pblack{position:absolute;top:0;width:5.8%;height:90px;background:#171a26;border:1px solid #777;z-index:2;transform:translateX(-50%);border-radius:0 0 4px 4px}
+.pblack.on{background:var(--pink)}
+.plabel{position:absolute;bottom:5px;width:100%;text-align:center;font-size:9px;color:#333}
+.legend{text-align:center;color:var(--muted);font-size:11px;margin-top:8px}
 </style>
 </head>
-
 <body>
 <div class="container">
 
@@ -248,57 +59,49 @@ button:active{transform:scale(.98)}
 <div class="subtitle">MUSIC THEORY / CHORD LAB</div>
 </header>
 
-<!-- BPM -->
 <div class="section">
 <div class="section-title">01 / BPM TAP</div>
-<div class="bpm-box">
-<div class="bpm-number" id="bpm">---</div>
-<div class="info">TAP THE BUTTON TO DETECT BPM</div>
-<button class="bpm-button" id="tapButton">TAP TEMPO</button>
-<div class="reset" id="tapInfo">0 taps</div>
-<button onclick="resetBpm()" style="margin-top:10px">RESET</button>
+<div class="bpm" id="bpm">---</div>
+<div class="info" style="text-align:center">TAP THE BUTTON TO DETECT BPM</div>
+<div style="text-align:center">
+<button class="bpm-button" id="tap">TAP TEMPO</button>
+<div class="status" id="tapInfo">0 taps</div>
+<button onclick="resetBpm()">RESET</button>
 </div>
 </div>
 
-<!-- NOTE INPUT -->
 <div class="section">
 <div class="section-title">02 / SELECT NOTES</div>
-<div class="info">
-ピアノ鍵盤をタップして、使いたい音を複数選択してください。<br>
-白鍵・黒鍵どちらも選択できます。
-</div>
-
+<div class="info">ピアノ鍵盤をタップして複数の音を選択。</div>
 <div id="inputKeyboard" class="input-keyboard"></div>
-
 <div class="selection" id="selectionInfo"></div>
-
-<button class="clear-button" onclick="clearNotes()">
-CLEAR ALL
-</button>
+<button class="clear" onclick="clearNotes()">CLEAR ALL</button>
 </div>
 
-<!-- SCALE -->
 <div class="section">
 <div class="section-title">03 / SUGGESTED KEYS</div>
 <div class="info">選択した音をすべて含むキー候補</div>
-<div class="scale-grid" id="scaleGrid"></div>
+<div class="grid" id="scaleGrid"></div>
 </div>
 
-<!-- CHORD -->
 <div class="section">
 <div class="section-title">04 / DIATONIC CHORDS</div>
 <div class="info" id="scaleInfo">キーを選択してください</div>
-<div class="chord-grid" id="chordGrid"></div>
+<div class="grid" id="chordGrid"></div>
 </div>
 
-<!-- DIAGRAM -->
 <div class="section">
-<div class="section-title">05 / INSTRUMENT DIAGRAM</div>
+<div class="section-title">05 / CHORD TYPE (96 CHORD CATALOG)</div>
+<div class="info">選択中のコードのルート音に、一覧表掲載の8種類を適用します。</div>
+<div class="quality-grid" id="qualityGrid"></div>
+<div class="status">12ルート × 8種類 = 96コード</div>
+</div>
+
+<div class="section">
+<div class="section-title">06 / INSTRUMENT DIAGRAM</div>
 <div class="tabs">
-<button id="guitarTab" class="active"
-onclick="setInstrument('guitar')">GUITAR</button>
-<button id="pianoTab"
-onclick="setInstrument('piano')">PIANO</button>
+<button id="guitarTab" class="active" onclick="setInstrument('guitar')">GUITAR</button>
+<button id="pianoTab" onclick="setInstrument('piano')">PIANO</button>
 </div>
 <div id="diagram">
 <div class="empty">キーとコードを選択してください</div>
@@ -308,583 +111,437 @@ onclick="setInstrument('piano')">PIANO</button>
 </div>
 
 <script>
-const NOTES=[
-"C","C#","D","D#","E","F",
-"F#","G","G#","A","A#","B"
-];
+const N=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const W=['C','D','E','F','G','A','B'];
+const B=['C#','D#','F#','G#','A#'];
+const BP={'C#':1,'D#':2,'F#':4,'G#':5,'A#':6};
 
-const WHITE_NOTES=["C","D","E","F","G","A","B"];
-const BLACK_NOTES=["C#","D#","F#","G#","A#"];
-
-const BLACK_POSITIONS={
-"C#":1,"D#":2,"F#":4,"G#":5,"A#":6
-};
-
-const INTERVALS={
+const SCALE={
 major:[0,2,4,5,7,9,11],
 minor:[0,2,3,5,7,8,10]
 };
 
-const selectedNotes=new Set(["C"]);
+const QUALITIES=[
+{id:'maj',label:'Major',suffix:'',iv:[0,4,7]},
+{id:'m',label:'Minor',suffix:'m',iv:[0,3,7]},
+{id:'7',label:'7',suffix:'7',iv:[0,4,7,10]},
+{id:'maj7',label:'maj7',suffix:'maj7',iv:[0,4,7,11]},
+{id:'m7',label:'m7',suffix:'m7',iv:[0,3,7,10]},
+{id:'m7b5',label:'m7-5',suffix:'m7-5',iv:[0,3,6,10]},
+{id:'sus4',label:'sus4',suffix:'sus4',iv:[0,5,7]},
+{id:'7sus4',label:'7sus4',suffix:'7sus4',iv:[0,5,7,10]}
+];
+
+const TUNING=[4,9,2,7,11,4];
+
+let selectedNotes=new Set(['C']);
 let selectedScale=null;
 let selectedChord=null;
-let instrument="guitar";
+let instrument='guitar';
+let shapes=[];
+let shapeIndex=0;
+let taps=[];
 
-const GUITAR_SHAPES={
-"C-major":{frets:"x32010",fingers:"032010",base:1},
-"D-major":{frets:"xx0232",fingers:"000132",base:1},
-"E-major":{frets:"022100",fingers:"023100",base:1},
-"G-major":{frets:"320003",fingers:"210003",base:1},
-"A-major":{frets:"x02220",fingers:"002220",base:1},
-"C-minor":{frets:"x35543",fingers:"034210",base:3},
-"D-minor":{frets:"xx0231",fingers:"000231",base:1},
-"E-minor":{frets:"022000",fingers:"023000",base:1},
-"G-minor":{frets:"355333",fingers:"134111",base:3},
-"A-minor":{frets:"x02210",fingers:"002310",base:1},
-"F-major":{frets:"133211",fingers:"134211",base:1},
-"F-minor":{frets:"133111",fingers:"134111",base:1}
-};
+const ix=n=>N.indexOf(n);
+const note=(root,i)=>N[(ix(root)+i)%12];
 
-function noteIndex(note){
-return NOTES.indexOf(note);
-}
-
-function getScaleNotes(root,type){
-const rootIndex=noteIndex(root);
-return INTERVALS[type].map(i=>NOTES[(rootIndex+i)%12]);
-}
-
-/* INPUT KEYBOARD */
 function renderNotes(){
+let el=document.getElementById('inputKeyboard');
+el.innerHTML='';
 
-const keyboard=document.getElementById("inputKeyboard");
-keyboard.innerHTML="";
-
-WHITE_NOTES.forEach(note=>{
-
-const key=document.createElement("button");
-key.className="input-white";
-
-if(selectedNotes.has(note)){
-key.classList.add("selected");
-}
-
-key.innerHTML=`<span class="key-label">${note}</span>`;
-
-key.onclick=()=>toggleNote(note);
-
-keyboard.appendChild(key);
+W.forEach(n=>{
+let b=document.createElement('button');
+b.className='input-white'+(selectedNotes.has(n)?' selected':'');
+b.innerHTML=`<span class="key-label">${n}</span>`;
+b.onclick=()=>toggle(n);
+el.appendChild(b);
 });
 
-BLACK_NOTES.forEach(note=>{
-
-const key=document.createElement("button");
-key.className="input-black";
-
-if(selectedNotes.has(note)){
-key.classList.add("selected");
-}
-
-key.style.left=(BLACK_POSITIONS[note]/7*100)+"%";
-
-key.onclick=()=>toggleNote(note);
-
-keyboard.appendChild(key);
+B.forEach(n=>{
+let b=document.createElement('button');
+b.className='input-black'+(selectedNotes.has(n)?' selected':'');
+b.style.left=(BP[n]/7*100)+'%';
+b.onclick=()=>toggle(n);
+el.appendChild(b);
 });
 
-document.getElementById("selectionInfo").textContent=
-"SELECTED: "+
-([...selectedNotes].sort((a,b)=>noteIndex(a)-noteIndex(b)).join(" / ") || "NONE")+
-"  ("+selectedNotes.size+" NOTES)";
+document.getElementById('selectionInfo').textContent=
+'SELECTED: '+[...selectedNotes].sort((a,b)=>ix(a)-ix(b)).join(' / ')+' ('+selectedNotes.size+' NOTES)';
 }
 
-function toggleNote(note){
-
-if(selectedNotes.has(note)){
-selectedNotes.delete(note);
-}else{
-selectedNotes.add(note);
-}
-
+function toggle(n){
+selectedNotes.has(n)?selectedNotes.delete(n):selectedNotes.add(n);
 selectedScale=null;
 selectedChord=null;
-
 renderNotes();
 renderScales();
 renderChords();
-renderDiagram();
+renderQuality();
 }
 
 function clearNotes(){
-
 selectedNotes.clear();
 selectedScale=null;
 selectedChord=null;
-
 renderNotes();
 renderScales();
 renderChords();
+renderQuality();
 renderDiagram();
 }
 
-/* SCALE SUGGESTION */
 function renderScales(){
-
-const grid=document.getElementById("scaleGrid");
-grid.innerHTML="";
-
+let g=document.getElementById('scaleGrid');
+g.innerHTML='';
 selectedScale=null;
 selectedChord=null;
 
-if(selectedNotes.size===0){
-grid.innerHTML='<div class="empty">音を選択してください</div>';
-renderChords();
-renderDiagram();
+if(!selectedNotes.size){
+g.innerHTML='<div class="empty">音を選択してください</div>';
 return;
 }
 
-const candidates=[];
+let a=[];
 
-NOTES.forEach(root=>{
-
-["major","minor"].forEach(type=>{
-
-const notes=getScaleNotes(root,type);
-
-const containsAll=[...selectedNotes].every(note=>
-notes.includes(note)
-);
-
-if(containsAll){
-candidates.push({root,type,notes});
+N.forEach(root=>{
+Object.keys(SCALE).forEach(type=>{
+let ns=SCALE[type].map(i=>note(root,i));
+if([...selectedNotes].every(n=>ns.includes(n))){
+a.push({root,type,notes:ns});
 }
-
+});
 });
 
-});
-
-if(candidates.length===0){
-grid.innerHTML=
-'<div class="empty">該当するキーがありません。選択音を確認してください。</div>';
-renderChords();
-renderDiagram();
+if(!a.length){
+g.innerHTML='<div class="empty">該当するキーがありません</div>';
 return;
 }
 
-candidates.forEach(scale=>{
+a.forEach(s=>{
+let d=document.createElement('div');
+d.className='scale-card';
+d.innerHTML=`<div class="scale-name">${s.root} ${s.type.toUpperCase()}</div>
+<div class="scale-notes">${s.notes.join(' / ')}</div>`;
 
-const card=document.createElement("div");
-card.className="scale-card";
-
-card.innerHTML=`
-<div class="scale-name">
-${scale.root} ${scale.type.toUpperCase()}
-</div>
-<div class="scale-notes">
-${scale.notes.join(" / ")}
-</div>
-`;
-
-card.onclick=()=>{
-
-selectedScale=scale;
+d.onclick=()=>{
+selectedScale=s;
 selectedChord=null;
-
-document.querySelectorAll(".scale-card")
-.forEach(x=>x.classList.remove("active"));
-
-card.classList.add("active");
-
+document.querySelectorAll('.scale-card').forEach(x=>x.classList.remove('active'));
+d.classList.add('active');
 renderChords();
+renderQuality();
 renderDiagram();
 };
 
-grid.appendChild(card);
+g.appendChild(d);
 });
-
-renderChords();
-renderDiagram();
 }
 
-/* DIATONIC CHORDS */
-function buildChords(scale){
+function buildChords(s){
+return s.notes.map((r,i)=>{
+let ns=[
+s.notes[i],
+s.notes[(i+2)%7],
+s.notes[(i+4)%7]
+];
 
-const notes=scale.notes;
-const result=[];
+let a=(ix(ns[1])-ix(r)+12)%12;
+let b=(ix(ns[2])-ix(r)+12)%12;
 
-for(let degree=0;degree<7;degree++){
+let q=a===3&&b===6?'dim':a===3?'m':'maj';
 
-const root=notes[degree];
-const third=notes[(degree+2)%7];
-const fifth=notes[(degree+4)%7];
-
-const a=(noteIndex(third)-noteIndex(root)+12)%12;
-const b=(noteIndex(fifth)-noteIndex(root)+12)%12;
-
-let quality="major";
-let suffix="";
-
-if(a===3&&b===7){
-quality="minor";
-suffix="m";
-}else if(a===3&&b===6){
-quality="dim";
-suffix="dim";
-}
-
-result.push({
-root,
-quality,
-name:root+suffix,
-degree:degree+1,
-notes:[root,third,fifth]
+return {
+root:r,
+quality:q,
+name:r+(q==='m'?'m':q==='dim'?'dim':''),
+notes:ns,
+degree:i+1,
+iv:ns.map(x=>(ix(x)-ix(r)+12)%12)
+};
 });
-
-}
-
-return result;
 }
 
 function renderChords(){
-
-const grid=document.getElementById("chordGrid");
-grid.innerHTML="";
+let g=document.getElementById('chordGrid');
+g.innerHTML='';
 
 if(!selectedScale){
-document.getElementById("scaleInfo").textContent=
-"キーを選択してください";
+document.getElementById('scaleInfo').textContent='キーを選択してください';
 return;
 }
 
-document.getElementById("scaleInfo").textContent=
-selectedScale.root+" "+selectedScale.type.toUpperCase()+
-" / "+selectedScale.notes.join(" - ");
+document.getElementById('scaleInfo').textContent=
+selectedScale.root+' '+selectedScale.type.toUpperCase()+' / '+selectedScale.notes.join(' - ');
 
-const chords=buildChords(selectedScale);
+buildChords(selectedScale).forEach(c=>{
+let b=document.createElement('button');
+b.className='chord-card';
+b.innerHTML=`<div class="chord-name">${c.name}</div><div class="status">${c.degree} DEGREE</div>`;
 
-chords.forEach(chord=>{
-
-const btn=document.createElement("button");
-btn.className="chord-card";
-
-btn.innerHTML=`
-<div class="chord-name">${chord.name}</div>
-<div class="chord-degree">${chord.degree} DEGREE</div>
-`;
-
-btn.onclick=()=>{
-
-selectedChord=chord;
-
-document.querySelectorAll(".chord-card")
-.forEach(x=>x.classList.remove("active"));
-
-btn.classList.add("active");
-
+b.onclick=()=>{
+selectedChord={...c,iv:c.iv};
+document.querySelectorAll('.chord-card').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+renderQuality();
 renderDiagram();
 };
 
-grid.appendChild(btn);
+g.appendChild(b);
 });
 }
 
-/* INSTRUMENT */
-function setInstrument(type){
+function renderQuality(){
+let g=document.getElementById('qualityGrid');
+g.innerHTML='';
 
-instrument=type;
+if(!selectedChord){
+g.innerHTML='<div class="empty">先にダイアトニックコードを選択してください</div>';
+return;
+}
 
-document.getElementById("guitarTab")
-.classList.toggle("active",type==="guitar");
+QUALITIES.forEach(q=>{
+let b=document.createElement('button');
+b.textContent=selectedChord.root+q.suffix;
+b.className=(selectedChord.quality===q.id?'active':'');
 
-document.getElementById("pianoTab")
-.classList.toggle("active",type==="piano");
+b.onclick=()=>{
+selectedChord={
+root:selectedChord.root,
+quality:q.id,
+name:selectedChord.root+q.suffix,
+notes:q.iv.map(i=>note(selectedChord.root,i)),
+iv:q.iv,
+degree:selectedChord.degree
+};
 
+document.querySelectorAll('.quality-grid button').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+renderDiagram();
+};
+
+g.appendChild(b);
+});
+}
+
+function setInstrument(t){
+instrument=t;
+guitarTab.classList.toggle('active',t==='guitar');
+pianoTab.classList.toggle('active',t==='piano');
 renderDiagram();
 }
 
 function renderDiagram(){
-
-const box=document.getElementById("diagram");
+let box=document.getElementById('diagram');
 
 if(!selectedChord){
-box.innerHTML=
-'<div class="empty">キーとコードを選択してください</div>';
+box.innerHTML='<div class="empty">キーとコードを選択してください</div>';
 return;
 }
 
-if(instrument==="guitar"){
-renderGuitar(box);
-}else{
-renderPiano(box);
+if(instrument==='guitar')renderGuitar(box);
+else renderPiano(box);
+}
+
+// 標準チューニングから構成音を満たす押さえ方候補を探索
+function solveChord(iv){
+let target=new Set(iv);
+let solutions=[];
+
+let opts=TUNING.map(open=>{
+let a=[-1];
+for(let f=0;f<=12;f++){
+if(target.has((open+f)%12))a.push(f);
+}
+return a;
+});
+
+function rec(s,arr){
+if(s===6){
+let played=arr.filter(x=>x>=0);
+if(played.length<3||played.length>6)return;
+
+let pcs=arr.map((f,i)=>f<0?null:(TUNING[i]+f)%12).filter(x=>x!==null);
+
+if(!iv.every(x=>pcs.includes(x)))return;
+
+let fretted=arr.filter(x=>x>0);
+let span=fretted.length?Math.max(...fretted)-Math.min(...fretted):0;
+if(span>4)return;
+
+let min=fretted.length?Math.min(...fretted):0;
+let max=fretted.length?Math.max(...fretted):0;
+
+let score=
+span*3+
+Math.max(0,max-5)*1.5+
+arr.filter(x=>x<0).length*2+
+Math.abs(played.length-5)*.4+
+(min>1?1:0);
+
+solutions.push({
+frets:arr.slice(),
+score,
+base:min>0?min:1
+});
+return;
+}
+
+for(let f of opts[s]){
+arr.push(f);
+rec(s+1,arr);
+arr.pop();
 }
 }
 
-/* GUITAR */
+rec(0,[]);
+solutions.sort((a,b)=>a.score-b.score);
+
+let seen=new Set();
+
+return solutions.filter(s=>{
+let k=s.frets.join(',');
+if(seen.has(k))return false;
+seen.add(k);
+return true;
+}).slice(0,8);
+}
+
 function renderGuitar(box){
+let c=selectedChord;
+shapes=solveChord(c.iv);
+shapeIndex=Math.min(shapeIndex,Math.max(0,shapes.length-1));
 
-const chord=selectedChord;
-const key=chord.root+"-"+chord.quality;
-const shape=GUITAR_SHAPES[key];
-
-if(!shape){
-box.innerHTML=`
-<div class="diagram-title">${chord.name}</div>
-<div class="status">
-このコードの押さえ方は未登録です。<br>
-ピアノ表示で構成音を確認できます。
-</div>`;
+if(!shapes.length){
+box.innerHTML=`<div class="diagram-title">${c.name}</div>
+<div class="empty">標準チューニングで表示可能なフォームが見つかりません。</div>`;
 return;
 }
 
-const frets=shape.frets.split("");
-const fingers=shape.fingers.split("");
-const base=shape.base;
+let s=shapes[shapeIndex];
+let base=s.base;
+let top=60,left=66,fw=64,sh=34;
+let right=left+fw*4;
+let bottom=top+sh*5;
+let y=i=>top+(5-i)*sh;
 
-const left=80,top=65,fw=62,sh=35;
-const right=left+fw*4;
-const bottom=top+sh*5;
-
-const yForString=s=>top+(5-s)*sh;
-
-let svg=`
-<svg viewBox="0 0 390 300"
-style="width:100%;max-width:390px;display:block;margin:auto">
-<text x="195" y="27" text-anchor="middle"
-fill="#6dff8a" font-size="23" font-weight="bold">
-${chord.name}</text>
-`;
+let svg=`<svg viewBox="0 0 380 290" style="width:100%;max-width:390px;display:block;margin:auto">
+<text x="190" y="25" text-anchor="middle" fill="#6dff8a" font-size="21">${c.name}</text>`;
 
 for(let f=0;f<4;f++){
-svg+=`
-<text x="${left+(f+.5)*fw}" y="49"
-text-anchor="middle" fill="#8791a8">${base+f}</text>`;
+svg+=`<text x="${left+(f+.5)*fw}" y="45" fill="#8994b5" text-anchor="middle">${base+f}</text>`;
 }
 
-/* Strings: top 1st, bottom 6th */
-for(let s=0;s<6;s++){
-
-const y=yForString(s);
-
-svg+=`
-<line x1="${left}" y1="${y}" x2="${right}" y2="${y}"
-stroke="#d5dbea" stroke-width="${1.2+s*.3}"/>
-<text x="52" y="${y+5}" fill="#dce3f5"
-font-size="14" text-anchor="middle">${6-s}</text>
-`;
+for(let i=0;i<6;i++){
+svg+=`<line x1="${left}" y1="${y(i)}" x2="${right}" y2="${y(i)}" stroke="#d5dbea" stroke-width="${1.2+i*.25}"/>
+<text x="39" y="${y(i)+5}" fill="#edf2ff" text-anchor="middle">${6-i}</text>`;
 }
 
-/* Frets */
 for(let f=0;f<=4;f++){
-
-const x=left+f*fw;
-
-svg+=`
-<line x1="${x}" y1="${top}" x2="${x}" y2="${bottom}"
-stroke="#aeb7ca" stroke-width="${f===0&&base===1?5:2}"/>
-`;
+svg+=`<line x1="${left+f*fw}" y1="${top}" x2="${left+f*fw}" y2="${bottom}" stroke="#aeb7ca" stroke-width="${f===0&&base===1?5:2}"/>`;
 }
 
-/* Barre */
-const groups={};
+for(let i=0;i<6;i++){
+let f=s.frets[i];
+let yy=y(i);
 
-for(let s=0;s<6;s++){
-
-const fret=Number(frets[s]);
-const finger=fingers[s];
-
-if(fret>0&&finger!=="0"){
-
-const k=fret+"-"+finger;
-(groups[k] ||= []).push(s);
-
+if(f<0){
+svg+=`<text x="${left-19}" y="${yy+6}" fill="#ff3bd4" font-size="21" text-anchor="middle">×</text>`;
+}else if(f===0){
+svg+=`<circle cx="${left-19}" cy="${yy}" r="6" fill="none" stroke="#6dff8a" stroke-width="2"/>`;
+}else{
+let x=left+(f-base+.5)*fw;
+if(x<left||x>right)continue;
+svg+=`<circle cx="${x}" cy="${yy}" r="10" fill="#00f6ff" stroke="white"/>`;
 }
 }
 
-const barreStrings=new Set();
+svg+='</svg>';
 
-Object.entries(groups).forEach(([k,strings])=>{
-
-if(strings.length<2)return;
-
-const [fret]=k.split("-").map(Number);
-const local=fret-base+1;
-
-if(local<1||local>4)return;
-
-const x=left+(local-.5)*fw;
-const y1=yForString(Math.max(...strings));
-const y2=yForString(Math.min(...strings));
-
-svg+=`
-<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"
-stroke="#00f6ff" stroke-width="16" stroke-linecap="round"/>
-`;
-
-strings.forEach(s=>barreStrings.add(s));
-});
-
-/* Finger markers */
-for(let s=0;s<6;s++){
-
-const y=yForString(s);
-const value=frets[s];
-const finger=fingers[s];
-
-if(value==="x"){
-
-svg+=`
-<text x="${left-24}" y="${y+6}"
-fill="#ff3bd4" font-size="21" text-anchor="middle">×</text>`;
-continue;
-
-}
-
-if(value==="0"){
-
-svg+=`
-<circle cx="${left-24}" cy="${y}" r="7"
-fill="none" stroke="#6dff8a" stroke-width="2.5"/>`;
-continue;
-
-}
-
-if(barreStrings.has(s))continue;
-
-const local=Number(value)-base+1;
-
-if(local<1||local>4)continue;
-
-const x=left+(local-.5)*fw;
-
-svg+=`
-<circle cx="${x}" cy="${y}" r="11"
-fill="#00f6ff" stroke="white" stroke-width="1.5"/>`;
-
-if(finger!=="0"){
-
-svg+=`
-<text x="${x}" y="${y+4}"
-text-anchor="middle" fill="#080a12"
-font-size="12" font-weight="bold">${finger}</text>`;
-
-}
-
-}
-
-svg+="</svg>";
+let nav=shapes.map((_,i)=>
+`<button class="${i===shapeIndex?'active':''}" onclick="shapeIndex=${i};renderDiagram()">FORM ${i+1}</button>`
+).join('');
 
 box.innerHTML=`
-<div class="diagram-title">${chord.name}</div>
-<div class="status">Guitar / Standard tuning</div>
+<div class="diagram-title">${c.name}</div>
+<div class="status">構成音: ${c.notes.join(' / ')}　|　候補 ${shapes.length}種類</div>
+<div class="shape-list">${nav}</div>
 ${svg}
-<div class="status">× Mute　○ Open　● Finger　┃ Barre</div>
-`;
+<div class="legend">× ミュート　○ 開放弦　● 押弦位置（1弦が上・6弦が下）</div>
+<div class="status">標準チューニングから構成音を満たす運指を計算。図は音程一致を優先した候補です。</div>`;
 }
 
-/* PIANO CHORD DIAGRAM */
 function renderPiano(box){
+let notes=selectedChord.notes;
+let html=`<div class="diagram-title">${selectedChord.name}</div>
+<div class="status">Chord tones: ${notes.join(' / ')}</div>
+<div class="piano">`;
 
-const notes=selectedChord.notes;
-
-let html=`
-<div class="diagram-title">${selectedChord.name}</div>
-<div class="status">Chord tones: ${notes.join(" / ")}</div>
-<div class="output-piano">
-`;
-
-for(let i=0;i<14;i++){
-
-const note=NOTES[i%12];
-const active=notes.includes(note);
-
-html+=`
-<div class="white-key ${active?"selected":""}">
-<span class="output-label">${note}</span>
-</div>
-`;
+let keys=[];
+for(let oct=0;oct<2;oct++){
+for(let n of W){
+let midi=oct*12+ix(n);
+keys.push({n,midi});
+}
 }
 
-html+="</div>";
-
-box.innerHTML=html;
-
-const piano=box.querySelector(".output-piano");
-
-const blackPositions=[
-1,2,4,5,6,8,9,11,12,13
-];
-
-blackPositions.forEach(index=>{
-
-const note=NOTES[(index-1)%12];
-const key=document.createElement("div");
-
-key.className="black-key";
-
-if(notes.includes(note)){
-key.classList.add("selected");
-}
-
-key.style.left=(index/14*100)+"%";
-
-piano.appendChild(key);
-
+keys.forEach(k=>{
+html+=`<div class="pwhite ${notes.includes(k.n)?'on':''}">
+<span class="plabel">${k.n}</span></div>`;
 });
 
-}
+html+='</div>';
+box.innerHTML=html;
 
-/* BPM */
-let taps=[];
+let piano=box.querySelector('.piano');
+let whiteIndex=0;
+
+for(let oct=0;oct<2;oct++){
+for(let j=0;j<7;j++){
+let n=W[j];
+
+if(j!==2&&j!==6){
+let semitone=ix(n)+1;
+let black=N[semitone%12];
+let el=document.createElement('div');
+el.className='pblack'+(notes.includes(black)?' on':'');
+el.style.left=((whiteIndex+1)/14*100)+'%';
+piano.appendChild(el);
+}
+whiteIndex++;
+}
+}
+}
 
 function tapBpm(){
+let now=Date.now();
 
-const now=Date.now();
-
-if(taps.length&&now-taps[taps.length-1]>3000){
-taps=[];
-}
+if(taps.length&&now-taps[taps.length-1]>3000)taps=[];
 
 taps.push(now);
-
 if(taps.length>8)taps.shift();
 
-if(taps.length>=2){
-
-const intervals=[];
-
-for(let i=1;i<taps.length;i++){
-intervals.push(taps[i]-taps[i-1]);
+if(taps.length>1){
+let ds=taps.slice(1).map((x,i)=>x-taps[i]);
+document.getElementById('bpm').textContent=
+Math.round(60000/(ds.reduce((a,b)=>a+b,0)/ds.length));
 }
 
-const avg=intervals.reduce((a,b)=>a+b,0)/intervals.length;
-
-document.getElementById("bpm").textContent=
-Math.round(60000/avg);
-
-}
-
-document.getElementById("tapInfo").textContent=
-taps.length+" taps";
-
+document.getElementById('tapInfo').textContent=taps.length+' taps';
 }
 
 function resetBpm(){
-
 taps=[];
-
-document.getElementById("bpm").textContent="---";
-document.getElementById("tapInfo").textContent="0 taps";
-
+document.getElementById('bpm').textContent='---';
+document.getElementById('tapInfo').textContent='0 taps';
 }
 
-document.getElementById("tapButton").onclick=tapBpm;
+document.getElementById('tap').onclick=tapBpm;
 
-/* INITIALIZE */
 renderNotes();
 renderScales();
 renderChords();
+renderQuality();
 renderDiagram();
-
 </script>
 </body>
 </html>
